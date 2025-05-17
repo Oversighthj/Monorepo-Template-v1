@@ -1,13 +1,13 @@
 include:
-  - "demo/**"
+  - "services/backend/**"
   - "apps/guest_app/**"
   - "apps/admin_app/**"
   - "apps/cleaner_app/**"
-  - "demo/src/main/java/**"
-  - "demo/src/main/java/com/example/demo/entity/BookingEntity.java"
+  - "services/backend/src/main/java/**"
+  - "services/backend/src/main/java/com/example/demo/entity/BookingEntity.java"
   - "config.yml"
 exclude:
-  - "demo/target/generated-sources/**"
+  - "services/backend/target/generated-sources/**"
   - "apps/**/lib/**/*.g.dart"
 backup_dir: ".backups"
 backup_retention_days: 7
