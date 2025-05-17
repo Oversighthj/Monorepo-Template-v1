@@ -1,0 +1,64 @@
+###############################################################################
+#                         pilot_app/.gitignore                                #
+###############################################################################
+
+########################
+# Miscellaneous files  #
+########################
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+########################
+# IntelliJ / Android   #
+########################
+.idea/
+*.iml
+*.ipr
+*.iws
+
+########################
+# VS Code              #
+########################
+# إذا أردت تجاهل إعدادات VS Code أزل علامة التعليق القادمة.
+#.vscode/
+
+########################
+# Flutter / Dart / Pub #
+########################
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+########################
+# Android build output #
+########################
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+########################
+# Symbolication / Maps #
+########################
+app.*.symbols
+app.*.map.json
+
+###############################################################################
+# ❗️ الاستثناءات — ملفات توليد build_runner التي نريدها داخل Git            #
+###############################################################################
+!lib/**/*.g.dart
+!lib/**/*.freezed.dart
