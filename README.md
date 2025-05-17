@@ -95,3 +95,5 @@ Ensure you have a simulator or device ready (or use `-d` to specify one). The Fl
 **3. Testing:** Both backend and frontend come with tests. You can run backend tests with `./mvnw test` (in `services/backend`) which will also produce a test coverage report (see `services/backend/target/site/jacoco` after running). For the Flutter app, run `flutter test` in `guest_app` to execute the Dart unit/widget tests. The CI pipeline runs these tests automatically on each commit.
 
 ---
+## Agent Guidelines
+See `AGENTS.md` for automated contributor rules. In short, run `pytest -q` before committing and regenerate OpenAPI clients with `./scripts/generate.sh` whenever you modify the spec.
