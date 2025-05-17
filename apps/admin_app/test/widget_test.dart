@@ -7,24 +7,39 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:dio/dio.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:template_api/template_api.dart';
 
-import 'package:admin_app/main.dart';
+import 'package:admin_app/features/feature/feature_page.dart';
+
+class _MockApi extends Mock implements DefaultApi {}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const AdminApp());
+  testWidgets('FeaturePage renders list', (WidgetTester tester) async {
+    final mock = _MockApi();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // جهّز استجابة وهميّة
+    when(() => mock.featureGet()).thenAnswer((_) async => Response(
+          data: BuiltList<FeatureDTO>([
+            FeatureDTO((b) => b
+              ..id = 1
+              ..name = 'Mock'),
+          ]),
+          statusCode: 200,
+          requestOptions: RequestOptions(path: ''),
+        ));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: FeaturePage(apiOverride: mock),
+      ),
+    );
+
+    // امنح الإطار وقتًا لبناء الواجهة
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Mock'), findsOneWidget);
   });
 }
