@@ -8,7 +8,7 @@
 
 ### 1.1 تحديث مواصفة OpenAPI
 
-- **المسار**: `demo/openapi.yaml`
+- **المسار**: `services/backend/src/main/resources/openapi.yaml`
 - **ماذا تفعل**: أضف قسمًا جديدًا تحت `paths` و`components.schemas` لتعريف endpoints وDTOs الخاصة بالميزة.
 
 ```yaml
@@ -42,7 +42,7 @@ components:
 
 ### 1.2 تكوين OpenAPI Generator في `pom.xml`
 
-- **المسار**: `demo/pom.xml`
+- **المسار**: `services/backend/pom.xml`
 - تحت `<build><plugins>...</plugins></build>`، أضف:
 
 ```xml
@@ -74,7 +74,7 @@ components:
 ### 1.3 توليد الكود والتحقق
 
 ```bash
-cd demo
+cd services/backend
 ./mvnw clean generate-sources compile
 ```
 - **التحقق**: تأكد من وجود الملفات المولدة في `target/generated-sources/openapi` مثل:
