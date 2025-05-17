@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 @Entity
 @Table(name = "USERS")
@@ -14,13 +16,14 @@ public class UserEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String role;
+  @Enumerated(EnumType.STRING)
+  private UserRole role;
   private String email;
   private String passwordHash;
 
   public UserEntity() {}
 
-  public UserEntity(Long id, String role, String email, String passwordHash) {
+  public UserEntity(Long id, UserRole role, String email, String passwordHash) {
     this.id = id;
     this.role = role;
     this.email = email;
@@ -35,11 +38,11 @@ public class UserEntity {
     this.id = id;
   }
 
-  public String getRole() {
+  public UserRole getRole() {
     return role;
   }
 
-  public void setRole(String role) {
+  public void setRole(UserRole role) {
     this.role = role;
   }
 
@@ -58,31 +61,4 @@ public class UserEntity {
   public void setPasswordHash(String passwordHash) {
     this.passwordHash = passwordHash;
   }
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-
-@Entity
-public class UserEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
 }
