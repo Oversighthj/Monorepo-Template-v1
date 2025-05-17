@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: Template API
+  version: "1.0"
+  description: |
+    Unified backend for Template API (Spring Boot) + Flutter client.
+
+servers:
+  - url: http://localhost:8080/api
+    description: Local dev
+
+# تم تضمين المسارات الجديدة فقط (/feature و /status) في الوثيقة
+paths:
+  /feature:
+    get:
+      summary: "Get feature list"
+      description: "Returns a list of features."
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FeatureDTO'
+              example:
+                - id: 1
+                  name: "Sample feature"
+  # مسار اختياري لفحص حالة التطبيق
+  /status:
+    get:
+      summary: "Status check"
+      description: "Returns 'alive' to indicate service is running."
+      responses:
+        '200':
+          description: "Success"
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: "alive"
+components:
+  schemas:
+    FeatureDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string

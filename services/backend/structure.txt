@@ -1,0 +1,253 @@
+.
+├── ./api-docs.json
+├── ./Dockerfile
+├── ./.dockerignore
+├── ./.gitattributes
+├── ./.gitignore
+├── ./hello.txt
+├── ./.mvn
+│   └── ./.mvn/wrapper
+│       └── ./.mvn/wrapper/maven-wrapper.properties
+├── ./mvnw
+├── ./mvnw.cmd
+├── ./.openapi-generator
+│   ├── ./.openapi-generator/FILES
+│   ├── ./.openapi-generator/openapi.yaml-generate-openapi.sha256
+│   └── ./.openapi-generator/VERSION
+├── ./.openapi-generator-ignore
+├── ./pom.xml
+├── ./README.md
+├── ./src
+│   ├── ./src/main
+│   │   ├── ./src/main/java
+│   │   │   ├── ./src/main/java/com
+│   │   │   │   └── ./src/main/java/com/example
+│   │   │   │       └── ./src/main/java/com/example/demo
+│   │   │   │           ├── ./src/main/java/com/example/demo/api
+│   │   │   │           ├── ./src/main/java/com/example/demo/auth
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/auth/AuthController.java
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/auth/AuthEntryPointJwt.java
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/auth/AuthService.java
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/auth/AuthTokenFilter.java
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/auth/JwtAuthFilter.java
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/auth/JwtUtils.java
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/auth/LoginRequest.java
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/auth/LoginResponse.java
+│   │   │   │           │   └── ./src/main/java/com/example/demo/auth/StubUserDetailsService.java
+│   │   │   │           ├── ./src/main/java/com/example/demo/controller
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/controller/BookingController.java
+│   │   │   │           │   └── ./src/main/java/com/example/demo/controller/PaymentController.java
+│   │   │   │           ├── ./src/main/java/com/example/demo/entity
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/entity/BookingEntity.java
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/entity/BookingEntity.java.orig
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/entity/BookingEntity.java.rej
+│   │   │   │           │   └── ./src/main/java/com/example/demo/entity/BookingStatus.java
+│   │   │   │           ├── ./src/main/java/com/example/demo/mapper
+│   │   │   │           │   └── ./src/main/java/com/example/demo/mapper/BookingMapper.java
+│   │   │   │           ├── ./src/main/java/com/example/demo/model
+│   │   │   │           ├── ./src/main/java/com/example/demo/payment
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/payment/impl
+│   │   │   │           │   │   └── ./src/main/java/com/example/demo/payment/impl/StripeStubService.java
+│   │   │   │           │   └── ./src/main/java/com/example/demo/payment/PaymentGateway.java
+│   │   │   │           ├── ./src/main/java/com/example/demo/PilotAppApplication.java
+│   │   │   │           ├── ./src/main/java/com/example/demo/repository
+│   │   │   │           │   └── ./src/main/java/com/example/demo/repository/BookingRepository.java
+│   │   │   │           ├── ./src/main/java/com/example/demo/security
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/security/README.md
+│   │   │   │           │   └── ./src/main/java/com/example/demo/security/SecurityConfig.java
+│   │   │   │           ├── ./src/main/java/com/example/demo/service
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/service/BookingService.java
+│   │   │   │           │   └── ./src/main/java/com/example/demo/service/impl
+│   │   │   │           │       └── ./src/main/java/com/example/demo/service/impl/BookingServiceImpl.java
+│   │   │   │           ├── ./src/main/java/com/example/demo/transport
+│   │   │   │           │   ├── ./src/main/java/com/example/demo/transport/TransportController.java
+│   │   │   │           │   └── ./src/main/java/com/example/demo/transport/TransportDTO.java
+│   │   │   │           └── ./src/main/java/com/example/demo/user
+│   │   │   │               ├── ./src/main/java/com/example/demo/user/README.md
+│   │   │   │               ├── ./src/main/java/com/example/demo/user/User.java
+│   │   │   │               ├── ./src/main/java/com/example/demo/user/UserMapper.java
+│   │   │   │               └── ./src/main/java/com/example/demo/user/UserRepository.java
+│   │   │   └── ./src/main/java/org
+│   │   ├── ./src/main/legacy
+│   │   │   ├── ./src/main/legacy/BookingService.java
+│   │   │   └── ./src/main/legacy/UserController.java
+│   │   └── ./src/main/resources
+│   │       ├── ./src/main/resources/application.properties
+│   │       ├── ./src/main/resources/db
+│   │       │   └── ./src/main/resources/db/migration
+│   │       │       ├── ./src/main/resources/db/migration/V1__init.sql
+│   │       │       ├── ./src/main/resources/db/migration/V2__create_bookings_table.sql
+│   │       │       ├── ./src/main/resources/db/migration/V3__add_resource_id_column.sql
+│   │       │       ├── ./src/main/resources/db/migration/V4__add_start_end_time_columns.sql
+│   │       │       ├── ./src/main/resources/db/migration/V5__add_created_updated_columns.sql
+│   │       │       ├── ./src/main/resources/db/migration/V6__add_total_price_column.sql
+│   │       │       └── ./src/main/resources/db/migration/V7__drop_unused_columns.sql
+│   │       └── ./src/main/resources/openapi.yaml
+│   └── ./src/test
+│       ├── ./src/test/java
+│       │   ├── ./src/test/java/com
+│       │   │   └── ./src/test/java/com/example
+│       │   │       └── ./src/test/java/com/example/demo
+│       │   │           ├── ./src/test/java/com/example/demo/api
+│       │   │           │   └── ./src/test/java/com/example/demo/api/BookingApiTest.java
+│       │   │           ├── ./src/test/java/com/example/demo/exception
+│       │   │           │   └── ./src/test/java/com/example/demo/exception/GlobalExceptionHandler.java
+│       │   │           ├── ./src/test/java/com/example/demo/PilotAppApplicationTests.java
+│       │   │           └── ./src/test/java/com/example/demo/service
+│       │   │               └── ./src/test/java/com/example/demo/service/BookingServiceTest.java
+│       │   └── ./src/test/java/org
+│       │       └── ./src/test/java/org/openapitools
+│       │           └── ./src/test/java/org/openapitools/OpenApiGeneratorApplicationTests.java
+│       └── ./src/test/legacy
+│           ├── ./src/test/legacy/BookingControllerTest.java
+│           ├── ./src/test/legacy/BookingServiceTest.java
+│           └── ./src/test/legacy/IntegrationBookingTest.java
+├── ./structure.txt
+└── ./target
+    ├── ./target/classes
+    │   ├── ./target/classes/application.properties
+    │   ├── ./target/classes/com
+    │   │   └── ./target/classes/com/example
+    │   │       └── ./target/classes/com/example/demo
+    │   │           ├── ./target/classes/com/example/demo/api
+    │   │           │   ├── ./target/classes/com/example/demo/api/ApiUtil.class
+    │   │           │   ├── ./target/classes/com/example/demo/api/BookingsApi.class
+    │   │           │   ├── ./target/classes/com/example/demo/api/PaymentsApi.class
+    │   │           │   ├── ./target/classes/com/example/demo/api/TransportApi.class
+    │   │           │   └── ./target/classes/com/example/demo/api/UsersApi.class
+    │   │           ├── ./target/classes/com/example/demo/auth
+    │   │           │   ├── ./target/classes/com/example/demo/auth/AuthController.class
+    │   │           │   ├── ./target/classes/com/example/demo/auth/AuthEntryPointJwt.class
+    │   │           │   ├── ./target/classes/com/example/demo/auth/AuthService.class
+    │   │           │   ├── ./target/classes/com/example/demo/auth/AuthTokenFilter.class
+    │   │           │   ├── ./target/classes/com/example/demo/auth/JwtAuthFilter.class
+    │   │           │   ├── ./target/classes/com/example/demo/auth/JwtUtils.class
+    │   │           │   ├── ./target/classes/com/example/demo/auth/LoginRequest.class
+    │   │           │   ├── ./target/classes/com/example/demo/auth/LoginResponse.class
+    │   │           │   └── ./target/classes/com/example/demo/auth/StubUserDetailsService.class
+    │   │           ├── ./target/classes/com/example/demo/controller
+    │   │           │   ├── ./target/classes/com/example/demo/controller/BookingController.class
+    │   │           │   └── ./target/classes/com/example/demo/controller/PaymentController.class
+    │   │           ├── ./target/classes/com/example/demo/entity
+    │   │           │   ├── ./target/classes/com/example/demo/entity/BookingEntity.class
+    │   │           │   └── ./target/classes/com/example/demo/entity/BookingStatus.class
+    │   │           ├── ./target/classes/com/example/demo/mapper
+    │   │           │   ├── ./target/classes/com/example/demo/mapper/BookingMapper.class
+    │   │           │   └── ./target/classes/com/example/demo/mapper/BookingMapperImpl.class
+    │   │           ├── ./target/classes/com/example/demo/model
+    │   │           │   ├── ./target/classes/com/example/demo/model/BookingDTO.class
+    │   │           │   ├── ./target/classes/com/example/demo/model/BookingStatus.class
+    │   │           │   ├── ./target/classes/com/example/demo/model/PaymentRequestDTO$ProviderEnum.class
+    │   │           │   ├── ./target/classes/com/example/demo/model/PaymentRequestDTO.class
+    │   │           │   ├── ./target/classes/com/example/demo/model/PaymentResponseDTO.class
+    │   │           │   ├── ./target/classes/com/example/demo/model/TransportBookingDTO.class
+    │   │           │   └── ./target/classes/com/example/demo/model/UserDTO.class
+    │   │           ├── ./target/classes/com/example/demo/payment
+    │   │           │   ├── ./target/classes/com/example/demo/payment/impl
+    │   │           │   │   └── ./target/classes/com/example/demo/payment/impl/StripeStubService.class
+    │   │           │   └── ./target/classes/com/example/demo/payment/PaymentGateway.class
+    │   │           ├── ./target/classes/com/example/demo/PilotAppApplication.class
+    │   │           ├── ./target/classes/com/example/demo/repository
+    │   │           │   └── ./target/classes/com/example/demo/repository/BookingRepository.class
+    │   │           ├── ./target/classes/com/example/demo/security
+    │   │           │   └── ./target/classes/com/example/demo/security/SecurityConfig.class
+    │   │           ├── ./target/classes/com/example/demo/service
+    │   │           │   ├── ./target/classes/com/example/demo/service/BookingService.class
+    │   │           │   └── ./target/classes/com/example/demo/service/impl
+    │   │           │       └── ./target/classes/com/example/demo/service/impl/BookingServiceImpl.class
+    │   │           ├── ./target/classes/com/example/demo/transport
+    │   │           │   ├── ./target/classes/com/example/demo/transport/TransportController.class
+    │   │           │   └── ./target/classes/com/example/demo/transport/TransportDTO.class
+    │   │           └── ./target/classes/com/example/demo/user
+    │   │               ├── ./target/classes/com/example/demo/user/User$UserBuilder.class
+    │   │               ├── ./target/classes/com/example/demo/user/User.class
+    │   │               ├── ./target/classes/com/example/demo/user/UserMapper.class
+    │   │               ├── ./target/classes/com/example/demo/user/UserMapperImpl.class
+    │   │               └── ./target/classes/com/example/demo/user/UserRepository.class
+    │   ├── ./target/classes/db
+    │   │   └── ./target/classes/db/migration
+    │   │       ├── ./target/classes/db/migration/V1__init.sql
+    │   │       ├── ./target/classes/db/migration/V2__create_bookings_table.sql
+    │   │       ├── ./target/classes/db/migration/V3__add_resource_id_column.sql
+    │   │       ├── ./target/classes/db/migration/V4__add_start_end_time_columns.sql
+    │   │       ├── ./target/classes/db/migration/V5__add_created_updated_columns.sql
+    │   │       ├── ./target/classes/db/migration/V6__add_total_price_column.sql
+    │   │       └── ./target/classes/db/migration/V7__drop_unused_columns.sql
+    │   └── ./target/classes/openapi.yaml
+    ├── ./target/generated-sources
+    │   ├── ./target/generated-sources/annotations
+    │   │   └── ./target/generated-sources/annotations/com
+    │   │       └── ./target/generated-sources/annotations/com/example
+    │   │           └── ./target/generated-sources/annotations/com/example/demo
+    │   │               ├── ./target/generated-sources/annotations/com/example/demo/mapper
+    │   │               │   └── ./target/generated-sources/annotations/com/example/demo/mapper/BookingMapperImpl.java
+    │   │               └── ./target/generated-sources/annotations/com/example/demo/user
+    │   │                   └── ./target/generated-sources/annotations/com/example/demo/user/UserMapperImpl.java
+    │   └── ./target/generated-sources/openapi
+    │       ├── ./target/generated-sources/openapi/.openapi-generator
+    │       │   ├── ./target/generated-sources/openapi/.openapi-generator/FILES
+    │       │   ├── ./target/generated-sources/openapi/.openapi-generator/openapi.yaml-generate-openapi.sha256
+    │       │   └── ./target/generated-sources/openapi/.openapi-generator/VERSION
+    │       ├── ./target/generated-sources/openapi/.openapi-generator-ignore
+    │       ├── ./target/generated-sources/openapi/pom.xml
+    │       ├── ./target/generated-sources/openapi/README.md
+    │       └── ./target/generated-sources/openapi/src
+    │           └── ./target/generated-sources/openapi/src/main
+    │               └── ./target/generated-sources/openapi/src/main/java
+    │                   └── ./target/generated-sources/openapi/src/main/java/com
+    │                       └── ./target/generated-sources/openapi/src/main/java/com/example
+    │                           └── ./target/generated-sources/openapi/src/main/java/com/example/demo
+    │                               ├── ./target/generated-sources/openapi/src/main/java/com/example/demo/api
+    │                               │   ├── ./target/generated-sources/openapi/src/main/java/com/example/demo/api/ApiUtil.java
+    │                               │   ├── ./target/generated-sources/openapi/src/main/java/com/example/demo/api/BookingsApi.java
+    │                               │   ├── ./target/generated-sources/openapi/src/main/java/com/example/demo/api/PaymentsApi.java
+    │                               │   ├── ./target/generated-sources/openapi/src/main/java/com/example/demo/api/TransportApi.java
+    │                               │   └── ./target/generated-sources/openapi/src/main/java/com/example/demo/api/UsersApi.java
+    │                               └── ./target/generated-sources/openapi/src/main/java/com/example/demo/model
+    │                                   ├── ./target/generated-sources/openapi/src/main/java/com/example/demo/model/BookingDTO.java
+    │                                   ├── ./target/generated-sources/openapi/src/main/java/com/example/demo/model/BookingStatus.java
+    │                                   ├── ./target/generated-sources/openapi/src/main/java/com/example/demo/model/PaymentRequestDTO.java
+    │                                   ├── ./target/generated-sources/openapi/src/main/java/com/example/demo/model/PaymentResponseDTO.java
+    │                                   ├── ./target/generated-sources/openapi/src/main/java/com/example/demo/model/TransportBookingDTO.java
+    │                                   └── ./target/generated-sources/openapi/src/main/java/com/example/demo/model/UserDTO.java
+    ├── ./target/generated-test-sources
+    │   └── ./target/generated-test-sources/test-annotations
+    ├── ./target/maven-status
+    │   └── ./target/maven-status/maven-compiler-plugin
+    │       ├── ./target/maven-status/maven-compiler-plugin/compile
+    │       │   └── ./target/maven-status/maven-compiler-plugin/compile/default-compile
+    │       │       ├── ./target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+    │       │       └── ./target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+    │       └── ./target/maven-status/maven-compiler-plugin/testCompile
+    │           └── ./target/maven-status/maven-compiler-plugin/testCompile/default-testCompile
+    │               ├── ./target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst
+    │               └── ./target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
+    ├── ./target/surefire-reports
+    │   ├── ./target/surefire-reports/com.example.demo.api.BookingApiTest.txt
+    │   ├── ./target/surefire-reports/com.example.demo.PilotAppApplicationTests.txt
+    │   ├── ./target/surefire-reports/com.example.demo.service.BookingServiceTest$Duplicate.txt
+    │   ├── ./target/surefire-reports/com.example.demo.service.BookingServiceTest$HappyPath.txt
+    │   ├── ./target/surefire-reports/com.example.demo.service.BookingServiceTest.txt
+    │   ├── ./target/surefire-reports/TEST-com.example.demo.api.BookingApiTest.xml
+    │   ├── ./target/surefire-reports/TEST-com.example.demo.PilotAppApplicationTests.xml
+    │   ├── ./target/surefire-reports/TEST-com.example.demo.service.BookingServiceTest$Duplicate.xml
+    │   ├── ./target/surefire-reports/TEST-com.example.demo.service.BookingServiceTest$HappyPath.xml
+    │   └── ./target/surefire-reports/TEST-com.example.demo.service.BookingServiceTest.xml
+    └── ./target/test-classes
+        ├── ./target/test-classes/com
+        │   └── ./target/test-classes/com/example
+        │       └── ./target/test-classes/com/example/demo
+        │           ├── ./target/test-classes/com/example/demo/api
+        │           │   └── ./target/test-classes/com/example/demo/api/BookingApiTest.class
+        │           ├── ./target/test-classes/com/example/demo/exception
+        │           │   └── ./target/test-classes/com/example/demo/exception/GlobalExceptionHandler.class
+        │           ├── ./target/test-classes/com/example/demo/PilotAppApplicationTests.class
+        │           └── ./target/test-classes/com/example/demo/service
+        │               ├── ./target/test-classes/com/example/demo/service/BookingServiceTest$Duplicate.class
+        │               ├── ./target/test-classes/com/example/demo/service/BookingServiceTest$HappyPath.class
+        │               └── ./target/test-classes/com/example/demo/service/BookingServiceTest.class
+        └── ./target/test-classes/org
+            └── ./target/test-classes/org/openapitools
+                └── ./target/test-classes/org/openapitools/OpenApiGeneratorApplicationTests.class
+
+95 directories, 155 files

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <!-- ============ Spring Boot + OpenAPI template‑service ============ 
+      نقاط بارزة:
+  • Java 17 / Spring Boot 3.4
+  • Lombok + MapStruct
+  • OpenAPI Generator (spring interface‑only) – يولّد stubs إلى target/generated‑sources/openapi
+  • Web + Validation + Actuator فقط، بلا أية ميزات عمل جاهزة
+  • Flyway مضاف ولكن بلا سكربتات مبدئيًا (يمكن حذفه إن لم يُستخدم)
+  • Spotless + Jacoco + Testcontainers-->
+  <!-- =========================================================================== -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- ───────────── Parent ───────────── -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.4.5</version>
+    <relativePath/>
+  </parent>
+
+  <!-- ───────────── GAV ───────────── -->
+  <groupId>com.example</groupId>
+  <artifactId>template-service</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>template-service</name>
+  <description>Minimal Spring Boot template service</description>
+
+  <!-- ───────────── Properties ───────────── -->
+  <properties>
+    <java.version>17</java.version>
+    <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <openapi-generator.version>6.6.0</openapi-generator.version>
+    <lombok.version>1.18.30</lombok.version>
+    <flyway.version>9.22.3</flyway.version>
+    <testcontainers.version>1.19.3</testcontainers.version>
+    <!-- نقطة الدخول -->
+    <start-class>com.example.app.TemplateApplication</start-class>
+  </properties>
+
+  <!-- ───────────── Dependencies ───────────── -->
+  <dependencies>
+    <!-- == الأساسيات == -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <!-- Lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- MapStruct -->
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${mapstruct.version}</version>
+    </dependency>
+
+    <!-- OpenAPI / Swagger UI (springdoc) -->
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>2.5.0</version>
+    </dependency>
+
+    <!-- Nullable helper المستخدمة في الكود المولّد -->
+    <dependency>
+      <groupId>org.openapitools</groupId>
+      <artifactId>jackson-databind-nullable</artifactId>
+      <version>0.2.6</version>
+    </dependency>
+
+    <!-- Flyway (اختياري) -->
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>${flyway.version}</version>
+    </dependency>
+
+    <!-- == اختبارات == -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <!-- ───────────── Build Plugins ───────────── -->
+  <build>
+    <plugins>
+      <!-- Compiler -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <annotationProcessorPaths>
+            <!-- Lombok AP -->
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <!-- MapStruct AP -->
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${mapstruct.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+      <!-- OpenAPI Generator: spring interface‑only -->
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>${openapi-generator.version}</version>
+        <executions>
+          <execution>
+            <id>generate-openapi</id>
+            <phase>generate-sources</phase>
+            <goals><goal>generate</goal></goals>
+            <configuration>
+              <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+              <generatorName>spring</generatorName>
+              <apiPackage>com.example.app.api</apiPackage>
+              <modelPackage>com.example.app.model</modelPackage>
+              <output>${project.build.directory}/generated-sources/openapi</output>
+              <configOptions>
+                <interfaceOnly>true</interfaceOnly>
+                <skipDefaultInterface>true</skipDefaultInterface>
+                <useSpringBoot3>true</useSpringBoot3>
+                <useJakartaEe>true</useJakartaEe>
+                <sourceFolder>src/main/java</sourceFolder>
+                <requestMappingMode>controller</requestMappingMode>
+                <useTags>true</useTags>
+                <generateSpringBootApplication>false</generateSpringBootApplication>
+              </configOptions>
+              <!-- عطّل الاختبارات والتطبيق الافتراضي تماماً -->
+              <skipApiTests>true</skipApiTests>
+              <skipModelTests>true</skipModelTests>
+              <skipDefaultInterface>true</skipDefaultInterface>
+              <skipDefaultImplementation>true</skipDefaultImplementation>
+              <generateApiTests>false</generateApiTests>
+              <generateModelTests>false</generateModelTests>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Build helper: يضم مصدر openapi إلى classpath -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>add-openapi-sources</id>
+            <phase>generate-sources</phase>
+            <goals><goal>add-source</goal></goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/openapi/src/main/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Spotless للتنسيق الأوتوماتيكي -->
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+      <version>2.44.2</version>
+        <configuration>
+          <java>
+            <googleJavaFormat/>
+            <removeUnusedImports />
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <goals><goal>apply</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Jacoco للتغطية -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.10</version>
+        <executions>
+          <execution>
+            <goals><goal>prepare-agent</goal></goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals><goal>report</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Spring Boot -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>${start-class}</mainClass>
+          <excludes>
+            <exclude>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+            </exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+          <!-- Surefire: استثناء اختبارات OpenAPI المولّدة -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.3</version>
+        <configuration>
+          <excludes>
+            <exclude>org/openapitools/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- ───────────── Dependency Management (Testcontainers BOM) ───────────── -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers-bom</artifactId>
+        <version>${testcontainers.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+</project>
+

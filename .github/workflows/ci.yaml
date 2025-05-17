@@ -1,0 +1,114 @@
+name: Full CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+concurrency:
+  group: ci-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+######################################################################
+# 🧩 Backend Job – Spring Boot service (services/backend)
+######################################################################
+jobs:
+  backend:
+    name: "Build & Test Backend (Spring Boot)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: ☕ Set up Temurin JDK 17 & Maven cache
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      # تنظيف أي بقايا عميل Dart قديم داخل pilot_app (احتياط)
+      - name: 🧹 Remove obsolete generated client
+        run: rm -rf pilot_app/lib/generated
+
+      # يولّد stubs للـ Backend + Dart client في packages/template_api
+      - name: 🔧 Generate OpenAPI stubs & Dart client
+        run: ./scripts/generate.sh
+
+      - name: 🏗️ Build & unit‑test backend
+        working-directory: services/backend
+        run: ./mvnw -q clean verify
+
+      - name: 📊 Jacoco coverage report
+        if: always()
+        working-directory: services/backend
+        run: ./mvnw jacoco:report
+
+######################################################################
+# 🐦 Flutter Job – UI + Dart client
+######################################################################
+  flutter:
+    name: "Build & Test Flutter"
+    needs: backend   # ينتظر نجاح الـ backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🐦 Set up Flutter SDK (stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: ♻️ Restore pub cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      # تأكّد من إزالة أي عميل قديم ثم توليد الجديد للاتساق
+      - name: 🔧 Ensure Dart client is up‑to‑date
+        run: ./scripts/generate.sh
+
+      # ─── Build template_api package ───────────────────────────────
+      - name: 📦 Install template_api dependencies
+        working-directory: packages/template_api
+        run: flutter pub get
+
+      - name: ⚙️ Generate built_value *.g.dart (template_api)
+        working-directory: packages/template_api
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      # ─── Build pilot_app ──────────────────────────────────────────
+      - name: 📦 Install pilot_app dependencies
+        working-directory: pilot_app
+        run: flutter pub get
+
+      - name: 🔍 Static analysis (fatal‑warnings)
+        working-directory: pilot_app
+        run: flutter analyze --fatal-warnings
+
+      - name: ✅ Run Flutter tests (with coverage)
+        working-directory: pilot_app
+        run: flutter test --coverage
+
+      - name: 📊 Generate HTML coverage (lcov)
+        if: success()
+        working-directory: pilot_app
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y lcov
+          genhtml coverage/lcov.info -o coverage/html
+
+######################################################################
+# ✨ Matrix spot for future services – ready to extend
+######################################################################
+#  e.g. add another backend here with:
+#  matrix:
+#    include:
+#      - path: services/user-service

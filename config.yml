@@ -1,0 +1,12 @@
+include:
+  - "demo/**"
+  - "pilot_app/**"
+  - "demo/src/main/java/**"
+  - "demo/src/main/java/com/example/demo/entity/BookingEntity.java"
+  - "config.yml"
+exclude:
+  - "demo/target/generated-sources/**"
+  - "pilot_app/**/*.g.dart"
+backup_dir: ".backups"
+backup_retention_days: 7
+generated_openapi: "demo/src/main/resources/openapi.yaml"
