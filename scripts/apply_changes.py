@@ -119,7 +119,7 @@ if not _cmd_exists("git"):
     LOG.error("%s required tool 'git' not found in PATH.", ERR)
     sys.exit(3)
 
-MVNW = REPO_ROOT / "demo" / "mvnw"
+MVNW = REPO_ROOT / "services" / "backend" / "mvnw"
 FLUTTER = shutil.which("flutter")
 
 # ───────────────────────── 6. config.yml ─────────────────────────
@@ -150,7 +150,12 @@ include_patterns: List[str] = raw_cfg.get("include", ["**/*"])
 exclude_patterns: List[str] = raw_cfg.get("exclude", [])
 backup_dir = REPO_ROOT / raw_cfg.get("backup_dir", ".backups")
 retention_days: int = int(raw_cfg.get("backup_retention_days", 7))
-generated_openapi = Path(raw_cfg.get("generated_openapi", "demo/src/main/resources/openapi.yaml"))
+generated_openapi = Path(
+    raw_cfg.get(
+        "generated_openapi",
+        "services/backend/src/main/resources/openapi.yaml",
+    )
+)
 
 # always exclude backup directory (handle nested paths)
 rel_backup = backup_dir.relative_to(REPO_ROOT)
@@ -325,7 +330,7 @@ try:
     if touched_openapi:
         LOG.info("Detected change in %s – regenerating sources…", generated_openapi)
         if not MVNW.exists():
-            raise FileNotFoundError("mvnw wrapper not found in demo/")
+            raise FileNotFoundError("mvnw wrapper not found in services/backend/")
         _run([str(MVNW), "-q", "openapi-generator:generate"], cwd=MVNW.parent, quiet=True)
         _run([str(MVNW), "-q", "verify"], cwd=MVNW.parent, quiet=True)
         if FLUTTER:
