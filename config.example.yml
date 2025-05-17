@@ -2,14 +2,10 @@ include:
   - "demo/**"
   - "demo/src/main/java/**"
   - "demo/src/main/java/com/example/demo/entity/BookingEntity.java"
-  - "apps/guest_app/**"
-  - "apps/admin_app/**"
-  - "apps/cleaner_app/**"
+  - "pilot_app/**"
 exclude:
   - "demo/target/generated-sources/**"
-  - "apps/guest_app/**/*.g.dart"
-  - "apps/admin_app/**/*.g.dart"
-  - "apps/cleaner_app/**/*.g.dart"
+  - "pilot_app/**/*.g.dart"
 backup_dir: ".backups"
 backup_retention_days: 7
 generated_openapi: "services/backend/src/main/resources/openapi.yaml"

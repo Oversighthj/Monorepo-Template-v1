@@ -42,9 +42,6 @@ jobs:
     name: Build & Test Flutter
     needs: backend
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        app: [apps/guest_app, apps/admin_app, apps/cleaner_app]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Flutter
@@ -52,16 +49,16 @@ jobs:
         with:
           channel: 'stable'
       - name: Install dependencies
-        working-directory: ${{ matrix.app }}
+        working-directory: pilot_app
         run: flutter pub get
       - name: Generate code
-        working-directory: ${{ matrix.app }}
+        working-directory: pilot_app
         run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Analyze
-        working-directory: ${{ matrix.app }}
+        working-directory: pilot_app
         run: flutter analyze --fatal-warnings
       - name: Run tests
-        working-directory: ${{ matrix.app }}
+        working-directory: pilot_app
         run: flutter test
 ```
 
