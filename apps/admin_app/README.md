@@ -110,7 +110,11 @@ final _router = GoRouter(routes: [
 ## تشغيل وبناء المشروع
 
 ```bash
+
 cd admin_app
+
+cd apps/admin_app
+
 flutter pub get
 flutter pub run build_runner build --delete-conflicting-outputs
 flutter analyze

@@ -346,6 +346,20 @@ try:
                 cwd=REPO_ROOT / "apps/guest_app",
                 quiet=True,
             )
+            apps_root = REPO_ROOT / "apps"
+            for app_dir in apps_root.glob("*_app"):
+                _run(
+                    [
+                        FLUTTER,
+                        "pub",
+                        "run",
+                        "build_runner",
+                        "build",
+                        "--delete-conflicting-outputs",
+                    ],
+                    cwd=app_dir,
+                    quiet=True,
+                )
         else:
             LOG.warning("%s flutter not found – skipping Dart rebuild.", WARN)
 
