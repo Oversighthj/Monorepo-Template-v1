@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.pilot" "\0"
-            VALUE "FileDescription", "pilot_app" "\0"
+            VALUE "FileDescription", "cleaner_app" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "pilot_app" "\0"
+            VALUE "InternalName", "cleaner_app" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.pilot. All rights reserved." "\0"
-            VALUE "OriginalFilename", "pilot_app.exe" "\0"
-            VALUE "ProductName", "pilot_app" "\0"
+            VALUE "OriginalFilename", "cleaner_app.exe" "\0"
+            VALUE "ProductName", "cleaner_app" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
