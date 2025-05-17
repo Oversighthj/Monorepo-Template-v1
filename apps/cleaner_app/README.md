@@ -1,4 +1,4 @@
-# pilot_app
+# cleaner_app
 
 A new Flutter project.
 
@@ -18,7 +18,7 @@ samples, guidance on mobile development, and a full API reference.
 
 
 
-# Flutter App - `pilot_app/`
+# Flutter App - `cleaner_app/`
 
 هذا المجلد يحتوي على تطبيق Flutter المسؤول عن واجهة المستخدم (Frontend) للمشروع.
 
@@ -34,7 +34,7 @@ samples, guidance on mobile development, and a full API reference.
 ## هيكل المجلدات
 
 ```text
-pilot_app/
+cleaner_app/
 ├── pubspec.yaml                         # تعريف التبعيات
 ├── lib/
 │   ├── core/                            # الأدوات المشتركة والخدمات
@@ -110,7 +110,7 @@ final _router = GoRouter(routes: [
 ## تشغيل وبناء المشروع
 
 ```bash
-cd pilot_app
+cd apps/cleaner_app
 flutter pub get
 flutter pub run build_runner build --delete-conflicting-outputs
 flutter analyze
