@@ -3,10 +3,15 @@ set -euo pipefail
 GEN_VERSION="6.6.0"
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.."; pwd)"
 
+
+# 🧹 احذف أي عميل Dart قديم داخل Flutter apps
+rm -rf "${PROJECT_ROOT}/apps/*_app/lib/generated"
+
 # 🧹 احذف أي عميل Dart قديم داخل جميع التطبيقات
 for app in "${PROJECT_ROOT}"/apps/*_app; do
   rm -rf "${app}/lib/generated"
 done
+
 
 # مجلد إخراج الحزمة الجديدة
 OUT="${PROJECT_ROOT}/packages/template_api"

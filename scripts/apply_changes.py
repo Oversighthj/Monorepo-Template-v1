@@ -334,6 +334,18 @@ try:
         _run([str(MVNW), "-q", "openapi-generator:generate"], cwd=MVNW.parent, quiet=True)
         _run([str(MVNW), "-q", "verify"], cwd=MVNW.parent, quiet=True)
         if FLUTTER:
+            _run(
+                [
+                    FLUTTER,
+                    "pub",
+                    "run",
+                    "build_runner",
+                    "build",
+                    "--delete-conflicting-outputs",
+                ],
+                cwd=REPO_ROOT / "apps/guest_app",
+                quiet=True,
+            )
             apps_root = REPO_ROOT / "apps"
             for app_dir in apps_root.glob("*_app"):
                 _run(

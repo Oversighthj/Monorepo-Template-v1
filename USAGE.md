@@ -34,7 +34,7 @@ This script runs the OpenAPI Generator CLI (via Docker) to generate a Dart clien
   ```
 
   This will generate any missing part files (e.g., serializers or built\_value generated code).
-* Finally, run `flutter pub get` in `pilot_app` as well, to ensure the app picks up the updated `template_api` package (if the package version or content changed, the path dependency will be refreshed).
+* Finally, run `flutter pub get` in `apps/guest_app` as well, to ensure the app picks up the updated `template_api` package (if the package version or content changed, the path dependency will be refreshed).
 
 After these steps, the Flutter app’s code can immediately use the new API calls or models defined in the updated spec. For example, if you added a `/feature` endpoint, the `template_api` might now have a new method `DefaultApi().getFeatures()` and a model class `FeatureDto` to use in your Dart code.
 
@@ -90,7 +90,7 @@ To illustrate how you would extend this template, let’s walk through adding a 
      Don’t forget to update the security configuration if your new endpoint needs role-based protection (see `SecurityConfig`, where you can add a rule for your `/feature` path). Also consider adding unit tests for your new service or controller.
 
 * **Step 4: Use the new endpoint in the Flutter app.**
-  With the backend providing data and the `template_api` Dart client updated, you can now call the new API from Flutter. Typically, you’d create a new “feature” module in the `pilot_app/lib/features` directory (analogous to the existing examples like `user` or `transport`). For instance:
+  With the backend providing data and the `template_api` Dart client updated, you can now call the new API from Flutter. Typically, you’d create a new “feature” module in the `guest_app/lib/features` directory (analogous to the existing examples like `user` or `transport`). For instance:
 
   * Create a Dart model class if needed (though you might use the generated `FeatureDto` from `template_api` directly, or define a simpler app-specific model). The template demonstrates both approaches – in some cases, you might use `template_api` models directly, or use `json_serializable` to define Flutter-side models.
   * Set up a data source or repository class to call the API. For example, a `FeatureRemoteDataSource` that calls `ApiClient.get('/feature')` or uses the generated client method. In our sample, the data source might call `templateApi.getFeatures()` and convert the result to your Flutter `FeatureModel`.
@@ -102,7 +102,7 @@ After following these steps, your new **Feature** functionality would be fully i
 
 ## Tips for Forking and Customization
 
-* **Renaming the Project:** If you fork this repository for your own project, you’ll likely want to change package names, remove the sample features, and adjust branding. The Java backend’s base package is `com.example.app` (and sometimes `com.example.demo` in placeholders) – you should replace this with your own domain (e.g., `com.mycompany.myapp`). Similarly, rename the Flutter app (currently `pilot_app`) to your app’s name and update its `pubspec.yaml` (name, bundle identifier, etc.). Search the codebase for “example” or “template” to find placeholders to replace. Renaming can be done manually or by using the provided `scripts/apply_changes.py` which can batch-apply name changes as per a config (advanced usage).
+* **Renaming the Project:** If you fork this repository for your own project, you’ll likely want to change package names, remove the sample features, and adjust branding. The Java backend’s base package is `com.example.app` (and sometimes `com.example.demo` in placeholders) – you should replace this with your own domain (e.g., `com.mycompany.myapp`). Similarly, rename the Flutter app (currently `guest_app`) to your app’s name and update its `pubspec.yaml` (name, bundle identifier, etc.). Search the codebase for “example” or “template” to find placeholders to replace. Renaming can be done manually or by using the provided `scripts/apply_changes.py` which can batch-apply name changes as per a config (advanced usage).
 * **Removing Sample Code:** The template includes some sample domain logic (such as a stubbed booking/payment feature and an auth stub, as seen in the codebase) to illustrate patterns. You can safely delete or replace these with your own features. Just ensure to remove their routes from the OpenAPI spec if you’re not using them, and regenerate the code to avoid leftover references.
 * **Adding a Database:** The Docker Compose file has an example PostgreSQL service commented out. If your feature needs a database, you can uncomment and adjust this. The backend is already set up with Spring Data JPA and Flyway, so you can write entities and repositories. Update `application-dev.yaml` (or equivalent config) with the DB connection info and add Flyway migration scripts in `resources/db/migration` if needed.
 * **API Versioning and URL Prefix:** By default, the OpenAPI spec and controllers use paths like `/feature`. In a real project, you might want them under a versioned API prefix, e.g., `/api/v1/feature`. You can adjust this in the OpenAPI spec (add a `servers` block with a base path) or via Spring configuration. The template doesn’t enforce a prefix, but it’s a good practice to add before going to production.

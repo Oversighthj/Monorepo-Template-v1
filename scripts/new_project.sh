@@ -99,6 +99,10 @@ done
 
 # ── Flutter side ──────────────────────────────────────────────────────────────
 if ! $SKIP_FLUTTER; then
+  sedit "s/^name: .*/name: $PROJECT_NAME/" apps/guest_app/pubspec.yaml
+  sedit "s/^description: .*/description: $PROJECT_NAME app/" apps/guest_app/pubspec.yaml
+  info "Updating Dart client imports…"
+  grep -rl "$TEMPLATE_PKG" apps/guest_app | while read -r f; do sedit "s#$TEMPLATE_PKG#$NEW_API_PKG#g" "$f"; done
   for app in apps/*_app; do
     sedit "s/^name: .*/name: $PROJECT_NAME/" "$app/pubspec.yaml"
     sedit "s/^description: .*/description: $PROJECT_NAME app/" "$app/pubspec.yaml"
@@ -112,9 +116,12 @@ fi
 # ── optional cleanup ──────────────────────────────────────────────────────────
 if $REMOVE_SAMPLES; then
   info "Removing template sample features & tests…"
+  rm -rf {guest_app,admin_app,cleaner_app}/lib/features/{user,transport} 2>/dev/null || true
+
   for app in apps/*_app; do
     rm -rf "$app"/lib/features/{user,transport} 2>/dev/null || true
   done
+
   find services/backend/src/main/java -name FeatureController.java -delete
   find services/backend/src/test/java -name TemplateApplicationTests.java -delete
 fi
@@ -133,7 +140,10 @@ if $INIT_GIT; then git init -q; git add .; git commit -qm "Initial commit from t
 info "🎉  Project ready at '$DEST'.  Next steps:"
 echo "   cd \"$DEST\""
 echo "   mvn -f services/backend spring-boot:run   # backend"
+$SKIP_FLUTTER || echo "   cd apps/guest_app && flutter run               # Flutter"
+
 FIRST_APP=$(find apps -maxdepth 1 -name '*_app' | head -n1)
 $SKIP_FLUTTER || echo "   cd ${FIRST_APP} && flutter run               # Flutter"
+
 
 exit 0

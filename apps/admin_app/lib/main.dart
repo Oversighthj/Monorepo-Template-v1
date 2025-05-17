@@ -1,4 +1,4 @@
-// pilot_app/lib/main.dart
+// admin_app/lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/di/service_locator.dart' as di;
@@ -10,18 +10,18 @@ Future<void> main() async {
 
   runApp(
     const ProviderScope(
-      child: PilotApp(),                   // يمكنك لاحقاً تغيير الاسم إلى TemplateApp
+      child: AdminApp(),                   // يمكنك لاحقاً تغيير الاسم إلى TemplateApp
     ),
   );
 }
 
-class PilotApp extends StatelessWidget {
-  const PilotApp({super.key});
+class AdminApp extends StatelessWidget {
+  const AdminApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Pilot App',                  // عدّل العنوان إذا أردت
+      title: 'Admin App',                  // عدّل العنوان إذا أردت
       theme: ThemeData(useMaterial3: true),
       routerConfig: router,                // يأتي من app_router.dart
     );
