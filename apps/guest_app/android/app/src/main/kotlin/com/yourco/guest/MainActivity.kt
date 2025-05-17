@@ -1,4 +1,4 @@
-package com.pilot.pilot_app
+package com.yourco.guest
 
 import io.flutter.embedding.android.FlutterActivity
 
