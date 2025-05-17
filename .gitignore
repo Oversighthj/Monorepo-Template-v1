@@ -89,3 +89,6 @@ patches/
 
 # مجلد عميل OpenAPI (اختياري إذا لا تريد تتبّعه)
 #pilot_app/lib/generated/pilot_app/lib/generated/
+node_modules/
+**/build/
+**/.dart_tool/

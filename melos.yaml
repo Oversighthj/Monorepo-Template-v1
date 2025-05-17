@@ -1,0 +1,6 @@
+name: monorepo_template
+packages:
+  - apps/**
+  - packages/**
+scripts:
+  bootstrap: flutter pub get
