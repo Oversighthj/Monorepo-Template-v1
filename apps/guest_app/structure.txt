@@ -16,8 +16,8 @@
 │   │       │   ├── ./android/app/src/main/kotlin
 │   │       │   │   └── ./android/app/src/main/kotlin/com
 │   │       │   │       └── ./android/app/src/main/kotlin/com/pilot
-│   │       │   │           └── ./android/app/src/main/kotlin/com/pilot/pilot_app
-│   │       │   │               └── ./android/app/src/main/kotlin/com/pilot/pilot_app/MainActivity.kt
+│   │       │   │           └── ./android/app/src/main/kotlin/com/pilot/guest_app
+│   │       │   │               └── ./android/app/src/main/kotlin/com/pilot/guest_app/MainActivity.kt
 │   │       │   └── ./android/app/src/main/res
 │   │       │       ├── ./android/app/src/main/res/drawable
 │   │       │       │   └── ./android/app/src/main/res/drawable/launch_background.xml
@@ -48,7 +48,7 @@
 │   ├── ./android/gradlew
 │   ├── ./android/gradlew.bat
 │   ├── ./android/local.properties
-│   ├── ./android/pilot_app_android.iml
+│   ├── ./android/guest_app_android.iml
 │   └── ./android/settings.gradle.kts
 ├── ./build
 │   ├── ./build/native_assets
@@ -223,7 +223,7 @@
 │           └── ./macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 ├── ./mock-data
 │   └── ./mock-data/db.json
-├── ./pilot_app.iml
+├── ./guest_app.iml
 ├── ./pubspec.lock
 ├── ./pubspec.yaml
 ├── ./README.md

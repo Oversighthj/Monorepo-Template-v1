@@ -210,7 +210,7 @@ public class FeatureServiceTest {
 
 ### 2.1 تعريف نموذج البيانات (Model)
 
-- **المسار**: `pilot_app/lib/features/feature/models/feature_model.dart`
+- **المسار**: `guest_app/lib/features/feature/models/feature_model.dart`
 
 ```dart
 import 'package:json_annotation/json_annotation.dart';
@@ -233,13 +233,13 @@ class FeatureModel {
 - ثم:
 
 ```bash
-cd pilot_app
+cd apps/guest_app
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
 ### 2.2 إضافة Data Source
 
-- **المسار**: `pilot_app/lib/features/feature/data/remote/feature_remote_data_source.dart`
+- **المسار**: `guest_app/lib/features/feature/data/remote/feature_remote_data_source.dart`
 
 ```dart
 import '../../models/feature_model.dart';
@@ -263,7 +263,7 @@ class FeatureRemoteDataSource {
 
 ### 2.3 إضافة Repository
 
-- **المسار**: `pilot_app/lib/features/feature/data/repository/feature_repository_impl.dart`
+- **المسار**: `guest_app/lib/features/feature/data/repository/feature_repository_impl.dart`
 
 ```dart
 import '../remote/feature_remote_data_source.dart';
@@ -283,7 +283,7 @@ class FeatureRepositoryImpl implements FeatureRepository {
 
 ### 2.4 إضافة Controller / StateNotifier
 
-- **المسار**: `pilot_app/lib/features/feature/presentation/controllers/feature_controller.dart`
+- **المسار**: `guest_app/lib/features/feature/presentation/controllers/feature_controller.dart`
 
 ```dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -359,7 +359,7 @@ class FeatureListPage extends ConsumerWidget {
 
 ### 2.6 تحديث التوجيه (Routing)
 
-- **المسار**: `pilot_app/lib/routes/app_router.dart`
+- **المسار**: `guest_app/lib/routes/app_router.dart`
 
 ```dart
 GoRoute(
@@ -374,7 +374,7 @@ GoRoute(
 
 ### 2.7 تسجيل DI للميزة
 
-- **المسار**: `pilot_app/lib/core/di/service_locator.dart`
+- **المسار**: `guest_app/lib/core/di/service_locator.dart`
 
 ```dart
 getIt.registerLazySingleton<FeatureRemoteDataSource>(

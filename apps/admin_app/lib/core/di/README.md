@@ -5,7 +5,7 @@
 ## الهيكل
 
 ```text
-pilot_app/lib/core/di/
+admin_app/lib/core/di/
 └── service_locator.dart    # تكوين GetIt لتسجيل واسترجاع الخدمات
 ```
 

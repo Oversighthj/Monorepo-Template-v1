@@ -5,7 +5,7 @@
 ## الهيكل
 
 ```text
-pilot_app/lib/core/
+admin_app/lib/core/
 ├── di/                             # إعداد حقن التبعيات
 │   └── service_locator.dart        # تكوين GetIt
 └── README.md                       # هذا الملف

@@ -5,7 +5,7 @@
 ## الهيكل
 
 ```text
-pilot_app/lib/routes/
+cleaner_app/lib/routes/
 ├── app_router.dart   # تكوين GoRouter مع قائمة المسارات
 └── README.md         # هذا الملف
 ```
@@ -45,7 +45,7 @@ final GoRouter router = GoRouter(
      runApp(
        MaterialApp.router(
          routerConfig: router,
-         title: 'Pilot App',
+         title: 'Cleaner App',
        ),
      );
    }

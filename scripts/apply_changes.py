@@ -343,7 +343,7 @@ try:
                     "build",
                     "--delete-conflicting-outputs",
                 ],
-                cwd=REPO_ROOT / "pilot_app",
+                cwd=REPO_ROOT / "apps/guest_app",
                 quiet=True,
             )
         else:
