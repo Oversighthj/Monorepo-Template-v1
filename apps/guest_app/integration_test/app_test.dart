@@ -7,7 +7,7 @@ import 'package:integration_test/integration_test.dart';
 // استورد الملف الذي يشغّل تطبيقك عادةً
 // عادةً نضعه بهذا الشكل إن كان لديك ملف main.dart
 // تحتوي على void main() => runApp(MyApp());
-import 'package:pilot_app/main.dart' as app;
+import 'package:guest_app/main.dart' as app;
 
 void main() {
   // Binding لاختبارات التكامل

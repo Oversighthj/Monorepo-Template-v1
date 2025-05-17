@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:template_api/template_api.dart';
 
-import 'package:pilot_app/features/feature/feature_page.dart';
+import 'package:guest_app/features/feature/feature_page.dart';
 
 class _MockApi extends Mock implements DefaultApi {}
 
