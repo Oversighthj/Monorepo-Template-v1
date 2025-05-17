@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: template_api
+dependency_overrides:
+  template_api:
+    path: ../../packages/template_api
