@@ -29,9 +29,12 @@ jobs:
           java-version: 17
           cache: maven
 
-      # تنظيف أي بقايا عميل Dart قديم داخل pilot_app (احتياط)
-      - name: 🧹 Remove obsolete generated client
-        run: rm -rf pilot_app/lib/generated
+      # تنظيف أي بقايا عميل Dart قديم لكل تطبيق Flutter (احتياط)
+      - name: 🧹 Remove obsolete generated clients
+        run: |
+          rm -rf apps/guest_app/lib/generated
+          rm -rf apps/admin_app/lib/generated
+          rm -rf apps/cleaner_app/lib/generated
 
       # يولّد stubs للـ Backend + Dart client في packages/template_api
       - name: 🔧 Generate OpenAPI stubs & Dart client
@@ -53,6 +56,12 @@ jobs:
     name: "Build & Test Flutter"
     needs: backend   # ينتظر نجاح الـ backend
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app:
+          - apps/guest_app
+          - apps/admin_app
+          - apps/cleaner_app
 
     steps:
       - name: ⬇️ Checkout repository
@@ -84,22 +93,22 @@ jobs:
         working-directory: packages/template_api
         run: flutter pub run build_runner build --delete-conflicting-outputs
 
-      # ─── Build pilot_app ──────────────────────────────────────────
-      - name: 📦 Install pilot_app dependencies
-        working-directory: pilot_app
+      # ─── Build Flutter app ${{ matrix.app }} ───────────────────────
+      - name: 📦 Install app dependencies
+        working-directory: ${{ matrix.app }}
         run: flutter pub get
 
       - name: 🔍 Static analysis (fatal‑warnings)
-        working-directory: pilot_app
+        working-directory: ${{ matrix.app }}
         run: flutter analyze --fatal-warnings
 
       - name: ✅ Run Flutter tests (with coverage)
-        working-directory: pilot_app
+        working-directory: ${{ matrix.app }}
         run: flutter test --coverage
 
       - name: 📊 Generate HTML coverage (lcov)
         if: success()
-        working-directory: pilot_app
+        working-directory: ${{ matrix.app }}
         run: |
           sudo apt-get update -y
           sudo apt-get install -y lcov
