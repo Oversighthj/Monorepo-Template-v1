@@ -69,4 +69,12 @@ public class BookingService {
 
     return bookingRepository.save(existing);
   }
+
+  public List<BookingEntity> findByFilters(Long propertyId, Long userId) {
+    return bookingRepository.findByFilters(propertyId, userId);
+  }
+
+  public void delete(Long id) {
+    bookingRepository.deleteById(id);
+  }
 }

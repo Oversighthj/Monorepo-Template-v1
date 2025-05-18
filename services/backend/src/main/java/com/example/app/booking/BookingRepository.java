@@ -19,4 +19,12 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
       @Param("startAt") LocalDateTime startAt,
       @Param("endAt") LocalDateTime endAt,
       @Param("excludeId") Long excludeId);
+
+  @Query(
+      "SELECT b FROM BookingEntity b "
+          + "WHERE (:propertyId IS NULL OR b.property.id = :propertyId) "
+          + "AND (:userId IS NULL OR b.user.id = :userId) "
+          + "ORDER BY b.id")
+  List<BookingEntity> findByFilters(
+      @Param("propertyId") Long propertyId, @Param("userId") Long userId);
 }
