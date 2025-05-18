@@ -59,9 +59,8 @@ class TaskControllerIntegrationTest {
                 userRepo.save(new UserEntity(null, UserRole.ADMIN, "owner@test.io", "hash"));
 
         // ---- property ----
-        PropertyEntity prop = new PropertyEntity(null, "Unit 1", "123 Main", owner);
-        prop.setActive(true);
-        prop = propertyRepo.save(prop);
+        PropertyEntity prop = propertyRepo.save(
+        new PropertyEntity(null, "Unit 1", "123 Main", owner));
 
         // ---- booking ----
         BookingEntity booking =
@@ -115,9 +114,8 @@ class TaskControllerIntegrationTest {
         // second property / booking
         UserEntity guest2 =
                 userRepo.save(new UserEntity(null, UserRole.GUEST, "guest2@test.io", "hash"));
-        PropertyEntity prop2 = new PropertyEntity(null, "Unit 2", "456 Other", guest2);
-        prop2.setActive(true);
-        prop2 = propertyRepo.save(prop2);
+        PropertyEntity prop2 = propertyRepo.save(
+        new PropertyEntity(null, "Unit 2", "456 Other", guest2));
 
         BookingEntity booking2 =
                 bookingRepo.save(
