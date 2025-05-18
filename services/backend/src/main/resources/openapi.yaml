@@ -63,6 +63,85 @@ paths:
       responses:
         '201':
           description: "Created"
+
+  /properties:
+    post:
+      summary: "Create property"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyDTO'
+      responses:
+        '201':
+          description: "Created"
+    get:
+      summary: "List properties"
+      parameters:
+        - in: query
+          name: ownerId
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PropertyDTO'
+
+  /properties/{id}:
+    get:
+      summary: "Get property"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyDTO'
+    put:
+      summary: "Update property"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyDTO'
+      responses:
+        '200':
+          description: "Success"
+    delete:
+      summary: "Delete property"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: "No Content"
 components:
   schemas:
     FeatureDTO:
@@ -90,6 +169,23 @@ components:
         - role
         - email
         - passwordHash
+    PropertyDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        address:
+          type: string
+        ownerId:
+          type: integer
+          format: int64
+      required:
+        - name
+        - address
+        - ownerId
     UserRole:
       type: string
       enum:

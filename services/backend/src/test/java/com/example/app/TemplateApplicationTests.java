@@ -2,6 +2,8 @@ package com.example.app;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Test;
@@ -39,5 +41,28 @@ public class TemplateApplicationTests {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].email").value("a@example.com"))
         .andExpect(jsonPath("$[0].passwordHash").doesNotExist());
+  }
+
+  @Test
+  public void testCreateAndListProperties() throws Exception {
+    String userBody = "{\"role\":\"GUEST\",\"email\":\"owner@example.com\",\"passwordHash\":\"x\"}";
+    mockMvc.perform(post("/users").contentType("application/json").content(userBody))
+        .andExpect(status().isCreated());
+
+    String userList = mockMvc.perform(get("/users"))
+        .andReturn()
+        .getResponse()
+        .getContentAsString();
+    ObjectMapper mapper = new ObjectMapper();
+    JsonNode node = mapper.readTree(userList).get(0);
+    long ownerId = node.get("id").asLong();
+
+    String propBody = String.format("{\"name\":\"House\",\"address\":\"123 st\",\"ownerId\":%d}", ownerId);
+    mockMvc.perform(post("/properties").contentType("application/json").content(propBody))
+        .andExpect(status().isCreated());
+
+    mockMvc.perform(get("/properties").param("ownerId", String.valueOf(ownerId)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].name").value("House"));
   }
 }
