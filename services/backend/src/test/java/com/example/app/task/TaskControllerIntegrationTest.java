@@ -1,6 +1,8 @@
 package com.example.app.task;
 
-import com.example.app.TemplateApplication;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.example.app.booking.BookingEntity;
 import com.example.app.booking.BookingRepository;
 import com.example.app.booking.BookingStatus;
@@ -9,9 +11,7 @@ import com.example.app.property.PropertyRepository;
 import com.example.app.user.UserEntity;
 import com.example.app.user.UserRepository;
 import com.example.app.user.UserRole;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,204 +21,188 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-/**
- * End-to-end tests for TaskController.
- */
-@SpringBootTest(classes = TemplateApplication.class)   // <- points to @SpringBootConfiguration
+@SpringBootTest(classes = TemplateApplication.class)   // ← غيّر الاسم لو لازم
 @AutoConfigureMockMvc
 class TaskControllerIntegrationTest {
 
-    @Autowired MockMvc mockMvc;
-    @Autowired ObjectMapper objectMapper;
+  @Autowired private MockMvc mockMvc;
 
-    @Autowired UserRepository userRepo;
-    @Autowired PropertyRepository propertyRepo;
-    @Autowired BookingRepository bookingRepo;
-    @Autowired TaskRepository taskRepo;
+  @Autowired private UserRepository userRepository;
+  @Autowired private BookingRepository bookingRepository;
+  @Autowired private PropertyRepository propertyRepository;
+  @Autowired private TaskRepository taskRepository;
 
-    private Long bookingId;
-    private Long cleanerId;
+  private Long cleanerId;
+  private Long bookingId;
 
-    @BeforeEach
-    void setUp() {
-        taskRepo.deleteAll();
-        bookingRepo.deleteAll();
-        propertyRepo.deleteAll();
-        userRepo.deleteAll();
+  @BeforeEach
+  void setup() {
+    taskRepository.deleteAll();
+    bookingRepository.deleteAll();
+    propertyRepository.deleteAll();
+    userRepository.deleteAll();
 
-        // users
-        UserEntity cleaner =
-                userRepo.save(new UserEntity(null, UserRole.CLEANER, "cleaner@test.io", "hash"));
-        cleanerId = cleaner.getId();
+    // users
+    UserEntity cleaner =
+        userRepository.save(new UserEntity(null, UserRole.CLEANER, "cleaner@test.io", "hash"));
+    cleanerId = cleaner.getId();
 
-        UserEntity guest =
-                userRepo.save(new UserEntity(null, UserRole.GUEST, "guest@test.io", "hash"));
-        UserEntity owner =
-                userRepo.save(new UserEntity(null, UserRole.ADMIN, "owner@test.io", "hash"));
+    UserEntity guest =
+        userRepository.save(new UserEntity(null, UserRole.GUEST, "guest@test.io", "hash"));
 
-        // property
-        PropertyEntity prop =
-                propertyRepo.save(new PropertyEntity(null, "Unit 1", "123 Main", owner, true));
+    UserEntity owner =
+        userRepository.save(new UserEntity(null, UserRole.ADMIN, "owner@test.io", "hash"));
 
-        // booking
-        BookingEntity booking =
-                bookingRepo.save(
-                        new BookingEntity(
-                                null,
-                                prop,
-                                guest,
-                                LocalDateTime.parse("2024-01-01T10:00"),
-                                LocalDateTime.parse("2024-01-02T10:00"),
-                                BookingStatus.CONFIRMED));
-        bookingId = booking.getId();
-    }
+    // property
+    PropertyEntity prop =
+        propertyRepository.save(new PropertyEntity(null, "Unit 1", "123 Main", owner));
 
-    /* ---------- helpers ---------- */
-    private String newTaskJson(long bId, long cId) {
-        return """
-                {
-                  "bookingId": %d,
-                  "cleanerId": %d,
-                  "type": "CLEAN",
-                  "status": "PENDING",
-                  "due": "2024-01-01T12:00:00Z"
-                }
-                """.formatted(bId, cId);
-    }
+    // booking
+    BookingEntity booking =
+        bookingRepository.save(
+            new BookingEntity(
+                null,
+                prop,
+                guest,
+                LocalDateTime.parse("2024-01-01T10:00"),
+                LocalDateTime.parse("2024-01-02T10:00"),
+                BookingStatus.CONFIRMED));
+    bookingId = booking.getId();
+  }
 
-    /* ---------- tests ---------- */
+  @Test
+  void postCreatesTaskAndListReturnsIt() throws Exception {
+    String body =
+        String.format(
+            "{\"bookingId\":%d,\"cleanerId\":%d,\"type\":\"CLEAN\",\"status\":\"PENDING\",\"due\":\"2024-01-01T12:00:00Z\"}",
+            bookingId, cleanerId);
 
-    @Test
-    void postCreatesTaskAndListReturnsIt() throws Exception {
-        mockMvc.perform(post("/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(newTaskJson(bookingId, cleanerId)))
-                .andExpect(status().isCreated());
+    mockMvc
+        .perform(post("/tasks").contentType(MediaType.APPLICATION_JSON).content(body))
+        .andExpect(status().isCreated());
 
-        mockMvc.perform(get("/tasks"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].bookingId").value(bookingId))
-                .andExpect(jsonPath("$[0].cleanerId").value(cleanerId));
-    }
+    mockMvc
+        .perform(get("/tasks"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].bookingId").value(bookingId))
+        .andExpect(jsonPath("$[0].cleanerId").value(cleanerId));
+  }
 
-    @Test
-    void filterByBookingIdReturnsOnlyBookingTasks() throws Exception {
-        // task for booking 1
-        mockMvc.perform(post("/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(newTaskJson(bookingId, cleanerId)))
-                .andExpect(status().isCreated());
+  @Test
+  void filterByBookingIdReturnsOnlyBookingTasks() throws Exception {
+    String body1 =
+        String.format(
+            "{\"bookingId\":%d,\"cleanerId\":%d,\"type\":\"CLEAN\",\"status\":\"PENDING\",\"due\":\"2024-01-01T12:00:00Z\"}",
+            bookingId, cleanerId);
+    mockMvc
+        .perform(post("/tasks").contentType(MediaType.APPLICATION_JSON).content(body1))
+        .andExpect(status().isCreated());
 
-        // another booking / property / guest
-        UserEntity guest2 =
-                userRepo.save(new UserEntity(null, UserRole.GUEST, "guest2@test.io", "hash"));
-        PropertyEntity prop2 =
-                propertyRepo.save(
-                        new PropertyEntity(null, "Unit 2", "456 Other", guest2, true));
-        BookingEntity booking2 =
-                bookingRepo.save(
-                        new BookingEntity(
-                                null,
-                                prop2,
-                                guest2,
-                                LocalDateTime.parse("2024-02-01T10:00"),
-                                LocalDateTime.parse("2024-02-02T10:00"),
-                                BookingStatus.CONFIRMED));
+    // second booking + task
+    UserEntity guest2 =
+        userRepository.save(new UserEntity(null, UserRole.GUEST, "guest2@test.io", "hash"));
+    PropertyEntity prop2 =
+        propertyRepository.save(
+            new PropertyEntity(null, "Unit 2", "456 Other", userRepository.findById(cleanerId).get()));
+    BookingEntity booking2 =
+        bookingRepository.save(
+            new BookingEntity(
+                null,
+                prop2,
+                guest2,
+                LocalDateTime.parse("2024-02-01T10:00"),
+                LocalDateTime.parse("2024-02-02T10:00"),
+                BookingStatus.CONFIRMED));
+    String body2 =
+        String.format(
+            "{\"bookingId\":%d,\"cleanerId\":%d,\"type\":\"CLEAN\",\"status\":\"PENDING\",\"due\":\"2024-02-01T12:00:00Z\"}",
+            booking2.getId(), cleanerId);
+    mockMvc
+        .perform(post("/tasks").contentType(MediaType.APPLICATION_JSON).content(body2))
+        .andExpect(status().isCreated());
 
-        // task for booking 2
-        mockMvc.perform(post("/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(newTaskJson(booking2.getId(), cleanerId)))
-                .andExpect(status().isCreated());
+    mockMvc
+        .perform(get("/tasks?bookingId=" + bookingId))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", Matchers.hasSize(1)))
+        .andExpect(jsonPath("$[0].bookingId").value(bookingId));
+  }
 
-        mockMvc.perform(get("/tasks?bookingId=" + bookingId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].bookingId").value(bookingId));
-    }
+  @Test
+  void filterByCleanerIdReturnsOnlyCleanerTasks() throws Exception {
+    String body1 =
+        String.format(
+            "{\"bookingId\":%d,\"cleanerId\":%d,\"type\":\"CLEAN\",\"status\":\"PENDING\",\"due\":\"2024-01-01T12:00:00Z\"}",
+            bookingId, cleanerId);
+    mockMvc
+        .perform(post("/tasks").contentType(MediaType.APPLICATION_JSON).content(body1))
+        .andExpect(status().isCreated());
 
-    @Test
-    void filterByCleanerIdReturnsOnlyCleanerTasks() throws Exception {
-        // task for cleaner 1
-        mockMvc.perform(post("/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(newTaskJson(bookingId, cleanerId)))
-                .andExpect(status().isCreated());
+    UserEntity cleaner2 =
+        userRepository.save(new UserEntity(null, UserRole.CLEANER, "c2@test.io", "hash"));
+    String body2 =
+        String.format(
+            "{\"bookingId\":%d,\"cleanerId\":%d,\"type\":\"CLEAN\",\"status\":\"PENDING\",\"due\":\"2024-01-01T12:00:00Z\"}",
+            bookingId, cleaner2.getId());
+    mockMvc
+        .perform(post("/tasks").contentType(MediaType.APPLICATION_JSON).content(body2))
+        .andExpect(status().isCreated());
 
-        // second cleaner
-        UserEntity cleaner2 =
-                userRepo.save(new UserEntity(null, UserRole.CLEANER, "c2@test.io", "hash"));
-        mockMvc.perform(post("/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(newTaskJson(bookingId, cleaner2.getId())))
-                .andExpect(status().isCreated());
+    mockMvc
+        .perform(get("/tasks?cleanerId=" + cleanerId))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", Matchers.hasSize(1)))
+        .andExpect(jsonPath("$[0].cleanerId").value(cleanerId));
+  }
 
-        mockMvc.perform(get("/tasks?cleanerId=" + cleanerId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$[0].cleanerId").value(cleanerId));
-    }
+  @Test
+  void getByIdReturnsTaskOr404() throws Exception {
+    String body =
+        String.format(
+            "{\"bookingId\":%d,\"cleanerId\":%d,\"type\":\"CLEAN\",\"status\":\"PENDING\",\"due\":\"2024-01-01T12:00:00Z\"}",
+            bookingId, cleanerId);
+    mockMvc
+        .perform(post("/tasks").contentType(MediaType.APPLICATION_JSON).content(body))
+        .andExpect(status().isCreated());
+    Long taskId = taskRepository.findAll().get(0).getId();
 
-    @Test
-    void getByIdReturnsTaskOr404() throws Exception {
-        mockMvc.perform(post("/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(newTaskJson(bookingId, cleanerId)))
-                .andExpect(status().isCreated());
+    mockMvc.perform(get("/tasks/" + taskId)).andExpect(status().isOk()).andExpect(jsonPath("$.id").value(taskId));
+    mockMvc.perform(get("/tasks/9999")).andExpect(status().isNotFound());
+  }
 
-        Long taskId = taskRepo.findAll().get(0).getId();
+  @Test
+  void putUpdatesStatus() throws Exception {
+    String body =
+        String.format(
+            "{\"bookingId\":%d,\"cleanerId\":%d,\"type\":\"CLEAN\",\"status\":\"PENDING\",\"due\":\"2024-01-01T12:00:00Z\"}",
+            bookingId, cleanerId);
+    mockMvc
+        .perform(post("/tasks").contentType(MediaType.APPLICATION_JSON).content(body))
+        .andExpect(status().isCreated());
+    Long taskId = taskRepository.findAll().get(0).getId();
 
-        mockMvc.perform(get("/tasks/" + taskId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(taskId));
+    String update =
+        String.format(
+            "{\"id\":%d,\"bookingId\":%d,\"cleanerId\":%d,\"type\":\"CLEAN\",\"status\":\"DONE\",\"due\":\"2024-01-01T12:00:00Z\"}",
+            taskId, bookingId, cleanerId);
+    mockMvc
+        .perform(put("/tasks/" + taskId).contentType(MediaType.APPLICATION_JSON).content(update))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status").value("DONE"));
+  }
 
-        mockMvc.perform(get("/tasks/99999")).andExpect(status().isNotFound());
-    }
+  @Test
+  void deleteRemovesTask() throws Exception {
+    String body =
+        String.format(
+            "{\"bookingId\":%d,\"cleanerId\":%d,\"type\":\"CLEAN\",\"status\":\"PENDING\",\"due\":\"2024-01-01T12:00:00Z\"}",
+            bookingId, cleanerId);
+    mockMvc
+        .perform(post("/tasks").contentType(MediaType.APPLICATION_JSON).content(body))
+        .andExpect(status().isCreated());
+    Long taskId = taskRepository.findAll().get(0).getId();
 
-    @Test
-    void putUpdatesStatus() throws Exception {
-        mockMvc.perform(post("/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(newTaskJson(bookingId, cleanerId)))
-                .andExpect(status().isCreated());
-
-        Long taskId = taskRepo.findAll().get(0).getId();
-
-        String updateJson =
-                """
-                {
-                  "id": %d,
-                  "bookingId": %d,
-                  "cleanerId": %d,
-                  "type": "CLEAN",
-                  "status": "DONE",
-                  "due": "2024-01-01T12:00:00Z"
-                }
-                """
-                        .formatted(taskId, bookingId, cleanerId);
-
-        mockMvc.perform(put("/tasks/" + taskId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("DONE"));
-    }
-
-    @Test
-    void deleteRemovesTask() throws Exception {
-        mockMvc.perform(post("/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(newTaskJson(bookingId, cleanerId)))
-                .andExpect(status().isCreated());
-
-        Long taskId = taskRepo.findAll().get(0).getId();
-
-        mockMvc.perform(delete("/tasks/" + taskId))
-                .andExpect(status().isNoContent());
-
-        mockMvc.perform(get("/tasks/" + taskId)).andExpect(status().isNotFound());
-    }
+    mockMvc.perform(delete("/tasks/" + taskId)).andExpect(status().isNoContent());
+    mockMvc.perform(get("/tasks/" + taskId)).andExpect(status().isNotFound());
+  }
 }
