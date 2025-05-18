@@ -9,24 +9,28 @@ import com.example.app.user.UserRepository;
 import jakarta.validation.Valid;
 import java.time.OffsetDateTime;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 public class TaskController implements TaskApi {
+
     private final TaskService taskService;
     private final BookingService bookingService;
     private final UserRepository userRepository;
 
+    /* ---------- POST /tasks ---------- */
     @Override
     public ResponseEntity<Void> tasksPost(@Valid @RequestBody TaskDTO dto) {
         BookingEntity booking = bookingService.findById(dto.getBookingId());
-        if (booking == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found");
+        if (booking == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found");
+        }
 
         UserEntity cleaner = userRepository.findById(dto.getCleanerId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cleaner not found"));
@@ -36,34 +40,43 @@ public class TaskController implements TaskApi {
                 booking,
                 cleaner,
                 dto.getType(),
-                TaskStatus.PENDING,
+                TaskStatus.PENDING,                     // default
                 dto.getDue().toLocalDateTime()
         );
         taskService.create(entity);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    /* ---------- GET /tasks (list + optional filters) ---------- */
     @Override
     public ResponseEntity<List<TaskDTO>> tasksGet(Long bookingId, Long cleanerId) {
         List<TaskDTO> list = taskService.findAll().stream()
-            .filter(t -> bookingId == null || t.getBooking().getId().equals(bookingId))
-            .filter(t -> cleanerId == null || t.getCleaner().getId().equals(cleanerId))
-            .map(this::toDto)
-            .toList();
+                .filter(t -> bookingId == null || t.getBooking().getId().equals(bookingId))
+                .filter(t -> cleanerId == null || t.getCleaner().getId().equals(cleanerId))
+                .map(this::toDto)
+                .toList();
         return ResponseEntity.ok(list);
     }
 
+    /* ---------- GET /tasks/{id} ---------- */
     @Override
     public ResponseEntity<TaskDTO> tasksIdGet(Long id) {
         TaskEntity e = taskService.findById(id);
-        if (e == null) return ResponseEntity.notFound().build();
+        if (e == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(toDto(e));
     }
 
+    /* ---------- PUT /tasks/{id} ---------- */
     @Override
-    public ResponseEntity<TaskDTO> tasksIdPut(Long id, @Valid @RequestBody TaskDTO dto) {
+    public ResponseEntity<TaskDTO> tasksIdPut(Long id,
+                                              @Valid @RequestBody TaskDTO dto) {
+
         BookingEntity booking = bookingService.findById(dto.getBookingId());
-        if (booking == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found");
+        if (booking == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found");
+        }
 
         UserEntity cleaner = userRepository.findById(dto.getCleanerId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cleaner not found"));
@@ -78,17 +91,20 @@ public class TaskController implements TaskApi {
         );
 
         TaskEntity updated = taskService.update(entity);
-        if (updated == null) return ResponseEntity.notFound().build();
-
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(toDto(updated));
     }
 
+    /* ---------- DELETE /tasks/{id} ---------- */
     @Override
     public ResponseEntity<Void> tasksIdDelete(Long id) {
         taskService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
+    /* ---------- helper mapper ---------- */
     private TaskDTO toDto(TaskEntity e) {
         TaskDTO d = new TaskDTO();
         d.setId(e.getId());
