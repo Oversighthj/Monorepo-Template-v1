@@ -7,3 +7,6 @@ src/gen/org/openapitools/model/FeatureDTO.java
 src/gen/com/example/app/api/BookingApi.java
 src/gen/com/example/app/model/BookingDTO.java
 src/gen/com/example/app/model/BookingStatus.java
+src/gen/com/example/app/api/TaskApi.java
+src/gen/com/example/app/model/TaskDTO.java
+src/gen/com/example/app/model/TaskStatus.java
