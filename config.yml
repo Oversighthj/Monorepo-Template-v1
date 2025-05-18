@@ -4,6 +4,7 @@ include:
   - "apps/admin_app/**"
   - "apps/cleaner_app/**"
   - "services/backend/src/main/java/**"
+  - "services/backend/src/main/java/com/example/app/user/UserEntity.java"
   - "services/backend/src/main/java/com/example/demo/entity/BookingEntity.java"
   - "config.yml"
 exclude:
