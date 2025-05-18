@@ -8,6 +8,7 @@ import com.example.app.property.PropertyRepository;
 import com.example.app.user.UserEntity;
 import com.example.app.user.UserRepository;
 import com.example.app.user.UserRole;
+import com.example.app.booking.BookingStatus;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class BookingServiceTests {
     first.setUser(user);
     first.setStartAt(LocalDateTime.of(2024, 1, 1, 10, 0));
     first.setEndAt(LocalDateTime.of(2024, 1, 1, 12, 0));
-    first.setStatus("NEW");
+    first.setStatus(BookingStatus.PENDING);
     bookingService.create(first);
 
     BookingEntity overlap = new BookingEntity();
@@ -44,7 +45,7 @@ public class BookingServiceTests {
     overlap.setUser(user);
     overlap.setStartAt(LocalDateTime.of(2024, 1, 1, 11, 0));
     overlap.setEndAt(LocalDateTime.of(2024, 1, 1, 13, 0));
-    overlap.setStatus("NEW");
+    overlap.setStatus(BookingStatus.PENDING);
 
     ResponseStatusException ex =
         assertThrows(ResponseStatusException.class, () -> bookingService.create(overlap));
