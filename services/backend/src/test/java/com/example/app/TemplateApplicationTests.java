@@ -1,6 +1,7 @@
 package com.example.app;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Test;
@@ -23,5 +24,20 @@ public class TemplateApplicationTests {
         .perform(get("/feature"))
         .andExpect(status().isOk())
         .andExpect(content().json("[{\"id\":1,\"name\":\"Sample feature\"}]"));
+  }
+
+  @Test
+  public void testCreateAndListUsers() throws Exception {
+    String body = "{\"role\":\"GUEST\",\"email\":\"a@example.com\",\"passwordHash\":\"hash\"}";
+
+    mockMvc
+        .perform(post("/users").contentType("application/json").content(body))
+        .andExpect(status().isCreated());
+
+    mockMvc
+        .perform(get("/users"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].email").value("a@example.com"))
+        .andExpect(jsonPath("$[0].passwordHash").doesNotExist());
   }
 }
