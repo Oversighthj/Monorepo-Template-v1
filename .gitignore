@@ -96,3 +96,7 @@ node_modules/
 # build output
 target/
 !patches/
+
+# تجاهل ملفات الأدوات الضخمة
+services/backend/.mvn/wrapper/apache-maven-*.zip
+vendor/*.whl
