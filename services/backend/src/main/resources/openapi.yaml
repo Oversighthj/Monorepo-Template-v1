@@ -234,6 +234,100 @@ paths:
       responses:
         '204':
           description: "Deleted"
+
+  /tasks:
+    post:
+      tags: [Task]
+      summary: "Create task"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDTO'
+      responses:
+        '201':
+          description: "Created"
+    get:
+      tags: [Task]
+      summary: "Get task list"
+      parameters:
+        - in: query
+          name: bookingId
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: cleanerId
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskDTO'
+
+  /tasks/{id}:
+    get:
+      tags: [Task]
+      summary: "Get task"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDTO'
+    put:
+      tags: [Task]
+      summary: "Update task"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDTO'
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDTO'
+    delete:
+      tags: [Task]
+      summary: "Delete task"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: "Deleted"
 components:
   schemas:
     FeatureDTO:
@@ -310,6 +404,36 @@ components:
         - PENDING
         - CONFIRMED
         - CANCELLED
+    TaskDTO:
+      type: object
+      required:
+        - bookingId
+        - cleanerId
+        - type
+        - status
+        - due
+      properties:
+        id:
+          type: integer
+          format: int64
+        bookingId:
+          type: integer
+          format: int64
+        cleanerId:
+          type: integer
+          format: int64
+        type:
+          type: string
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        due:
+          type: string
+          format: date-time
+    TaskStatus:
+      type: string
+      enum:
+        - PENDING
+        - DONE
     UserRole:
       type: string
       enum:
