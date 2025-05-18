@@ -2,6 +2,7 @@ package com.example.app.booking;
 
 import com.example.app.property.PropertyEntity;
 import com.example.app.user.UserEntity;
+import com.example.app.booking.BookingStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,7 +37,8 @@ public class BookingEntity {
   @Column(name = "end")
   private LocalDateTime end;
 
-  private String status;
+  @Enumerated(EnumType.STRING)
+  private BookingStatus status;
 
   public BookingEntity() {}
 
@@ -44,7 +48,7 @@ public class BookingEntity {
       UserEntity user,
       LocalDateTime start,
       LocalDateTime end,
-      String status) {
+      BookingStatus status) {
     this.id = id;
     this.property = property;
     this.user = user;
@@ -93,11 +97,11 @@ public class BookingEntity {
     this.end = end;
   }
 
-  public String getStatus() {
+  public BookingStatus getStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(BookingStatus status) {
     this.status = status;
   }
 }
