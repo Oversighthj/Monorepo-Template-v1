@@ -146,6 +146,8 @@ paths:
           description: "Deleted"
   /bookings:
     post:
+      tags:
+        - Booking
       summary: "Create booking"
       requestBody:
         required: true
@@ -157,6 +159,8 @@ paths:
         '201':
           description: "Created"
     get:
+      tags:
+        - Booking
       summary: "Get booking list"
       parameters:
         - in: query
@@ -180,6 +184,8 @@ paths:
                   $ref: '#/components/schemas/BookingDTO'
   /bookings/{id}:
     get:
+      tags:
+        - Booking
       summary: "Get booking"
       parameters:
         - name: id
@@ -196,6 +202,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookingDTO'
     put:
+      tags:
+        - Booking
       summary: "Update booking"
       parameters:
         - name: id
@@ -218,6 +226,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookingDTO'
     delete:
+      tags:
+        - Booking
       summary: "Delete booking"
       parameters:
         - name: id
