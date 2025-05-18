@@ -80,6 +80,19 @@ public class TaskController implements TaskApi {
     public ResponseEntity<Void> tasksIdDelete(@PathVariable("id") Long id) {
         taskService.delete(id);
         return ResponseEntity.noContent().build();
+
+    public ResponseEntity<TaskDTO> tasksIdPut(Long id, @Valid @RequestBody TaskDTO dto) {
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    }
+
+    @Override
+    public ResponseEntity<TaskDTO> tasksIdGet(Long id) {
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    }
+
+    @Override
+    public ResponseEntity<Void> tasksIdDelete(Long id) {
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
     private TaskDTO toDto(TaskEntity e) {
@@ -108,5 +121,4 @@ public class TaskController implements TaskApi {
                 d.getDue().toLocalDateTime()
         );
     }
-
 }

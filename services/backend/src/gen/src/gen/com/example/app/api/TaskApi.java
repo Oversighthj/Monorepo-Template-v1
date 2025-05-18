@@ -32,6 +32,7 @@ public interface TaskApi {
             @Parameter(name = "bookingId") @RequestParam(value = "bookingId", required = false) Long bookingId,
             @Parameter(name = "cleanerId") @RequestParam(value = "cleanerId", required = false) Long cleanerId);
 
+
     @Operation(operationId = "tasksIdGet", summary = "Get task", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = TaskDTO.class))
@@ -57,4 +58,5 @@ public interface TaskApi {
     @RequestMapping(method = RequestMethod.DELETE, value = "/tasks/{id}")
     ResponseEntity<Void> tasksIdDelete(
             @Parameter(name = "id", required = true) @PathVariable("id") Long id);
+
 }
