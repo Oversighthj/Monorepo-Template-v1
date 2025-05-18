@@ -7,43 +7,44 @@ import org.springframework.stereotype.Service;
 @Service
 public class TaskService {
 
-  private final TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
-  public TaskService(TaskRepository taskRepository) {
-    this.taskRepository = taskRepository;
-  }
-
-  public TaskEntity create(TaskEntity task) {
-    return taskRepository.save(task);
-  }
-
-  public List<TaskEntity> findAll() {
-    return taskRepository.findAll();
-  }
-
-  public TaskEntity findById(Long id) {
-    Optional<TaskEntity> entity = taskRepository.findById(id);
-    return entity.orElse(null);
-  }
-
-  public TaskEntity update(TaskEntity task) {
-    if (task.getId() == null) {
-      throw new IllegalArgumentException("task id required");
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
     }
-    Optional<TaskEntity> existingOpt = taskRepository.findById(task.getId());
-    if (existingOpt.isEmpty()) {
-      return null;
-    }
-    TaskEntity existing = existingOpt.get();
-    existing.setBooking(task.getBooking());
-    existing.setCleaner(task.getCleaner());
-    existing.setType(task.getType());
-    existing.setStatus(task.getStatus());
-    existing.setDue(task.getDue());
-    return taskRepository.save(existing);
-  }
 
-  public void delete(Long id) {
-    taskRepository.deleteById(id);
-  }
+    /* ---------- CRUD wrappers ---------- */
+
+    public TaskEntity create(TaskEntity task) {
+        return taskRepository.save(task);
+    }
+
+    public List<TaskEntity> findAll() {
+        return taskRepository.findAll();
+    }
+
+    public TaskEntity findById(Long id) {
+        return taskRepository.findById(id).orElse(null);
+    }
+
+    public TaskEntity update(TaskEntity task) {
+        if (task.getId() == null) {
+            throw new IllegalArgumentException("task id required");
+        }
+
+        return taskRepository.findById(task.getId())
+                .map(existing -> {
+                    existing.setBooking(task.getBooking());
+                    existing.setCleaner(task.getCleaner());
+                    existing.setType(task.getType());
+                    existing.setStatus(task.getStatus());
+                    existing.setDue(task.getDue());
+                    return taskRepository.save(existing);
+                })
+                .orElse(null);
+    }
+
+    public void delete(Long id) {
+        taskRepository.deleteById(id);
+    }
 }
