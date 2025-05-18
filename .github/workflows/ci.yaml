@@ -110,6 +110,27 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y lcov
           genhtml coverage/lcov.info -o coverage/html
+######################################################################
+# 🐍 Python Job – unit tests
+######################################################################
+  python-tests:
+    name: "Run Python Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 📦 Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: ✅ Run Pytest
+        run: pytest -q
+
 
 ######################################################################
 # ✨ Matrix spot for future services – ready to extend
