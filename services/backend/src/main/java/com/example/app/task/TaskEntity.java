@@ -10,6 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import com.example.app.task.TaskStatus;
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,7 +32,9 @@ public class TaskEntity {
   private UserEntity cleaner;
 
   private String type;
-  private String status;
+
+  @Enumerated(EnumType.STRING)
+  private TaskStatus status;
   private LocalDateTime due;
 
   public TaskEntity() {}
@@ -39,7 +44,7 @@ public class TaskEntity {
       BookingEntity booking,
       UserEntity cleaner,
       String type,
-      String status,
+      TaskStatus status,
       LocalDateTime due) {
     this.id = id;
     this.booking = booking;
@@ -81,11 +86,11 @@ public class TaskEntity {
     this.type = type;
   }
 
-  public String getStatus() {
+  public TaskStatus getStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(TaskStatus status) {
     this.status = status;
   }
 
