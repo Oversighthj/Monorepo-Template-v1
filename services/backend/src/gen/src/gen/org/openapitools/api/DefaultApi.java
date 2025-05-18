@@ -6,6 +6,7 @@
 package org.openapitools.api;
 
 import org.openapitools.model.FeatureDTO;
+import org.openapitools.model.UserDTO;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -85,7 +86,53 @@ public interface DefaultApi {
         produces = { "text/plain" }
     )
     ResponseEntity<String> statusGet(
-        
+
+    );
+
+
+    /**
+     * GET /users : Get user list
+     *
+     * @return Success (status code 200)
+     */
+    @Operation(
+        operationId = "usersGet",
+        summary = "Get user list",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/users",
+        produces = { "application/json" }
+    )
+    ResponseEntity<List<UserDTO>> usersGet(
+
+    );
+
+    /**
+     * POST /users : Create user
+     *
+     * @param userDTO  (required)
+     * @return Created (status code 201)
+     */
+    @Operation(
+        operationId = "usersPost",
+        summary = "Create user",
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Created")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/users",
+        consumes = { "application/json" }
+    )
+    ResponseEntity<Void> usersPost(
+        @Parameter(name = "UserDTO", required = true) @Valid @RequestBody UserDTO userDTO
     );
 
 }
