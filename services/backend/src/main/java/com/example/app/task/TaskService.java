@@ -1,17 +1,15 @@
 package com.example.app.task;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class TaskService {
 
   private final TaskRepository taskRepository;
-
-  public TaskService(TaskRepository taskRepository) {
-    this.taskRepository = taskRepository;
-  }
 
   public TaskEntity create(TaskEntity task) {
     return taskRepository.save(task);
@@ -22,25 +20,25 @@ public class TaskService {
   }
 
   public TaskEntity findById(Long id) {
-    Optional<TaskEntity> entity = taskRepository.findById(id);
-    return entity.orElse(null);
+    return taskRepository.findById(id).orElse(null);
   }
 
   public TaskEntity update(TaskEntity task) {
     if (task.getId() == null) {
       throw new IllegalArgumentException("task id required");
     }
-    Optional<TaskEntity> existingOpt = taskRepository.findById(task.getId());
-    if (existingOpt.isEmpty()) {
-      return null;
-    }
-    TaskEntity existing = existingOpt.get();
-    existing.setBooking(task.getBooking());
-    existing.setCleaner(task.getCleaner());
-    existing.setType(task.getType());
-    existing.setStatus(task.getStatus());
-    existing.setDue(task.getDue());
-    return taskRepository.save(existing);
+    return taskRepository
+        .findById(task.getId())
+        .map(
+            existing -> {
+              existing.setBooking(task.getBooking());
+              existing.setCleaner(task.getCleaner());
+              existing.setType(task.getType());
+              existing.setStatus(task.getStatus());
+              existing.setDue(task.getDue());
+              return taskRepository.save(existing);
+            })
+        .orElse(null);
   }
 
   public void delete(Long id) {
