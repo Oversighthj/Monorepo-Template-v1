@@ -30,7 +30,17 @@ public class TaskService {
     if (task.getId() == null) {
       throw new IllegalArgumentException("task id required");
     }
-    return taskRepository.save(task);
+    Optional<TaskEntity> current = taskRepository.findById(task.getId());
+    if (current.isEmpty()) {
+      return null;
+    }
+    TaskEntity entity = current.get();
+    entity.setBooking(task.getBooking());
+    entity.setCleaner(task.getCleaner());
+    entity.setType(task.getType());
+    entity.setStatus(task.getStatus());
+    entity.setDue(task.getDue());
+    return taskRepository.save(entity);
   }
 
   public void delete(Long id) {
