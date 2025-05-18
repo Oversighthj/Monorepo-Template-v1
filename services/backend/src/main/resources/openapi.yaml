@@ -144,6 +144,91 @@ paths:
       responses:
         '204':
           description: "Deleted"
+  /bookings:
+    post:
+      summary: "Create booking"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingDTO'
+      responses:
+        '201':
+          description: "Created"
+    get:
+      summary: "Get booking list"
+      parameters:
+        - in: query
+          name: propertyId
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: userId
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookingDTO'
+  /bookings/{id}:
+    get:
+      summary: "Get booking"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingDTO'
+    put:
+      summary: "Update booking"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingDTO'
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingDTO'
+    delete:
+      summary: "Delete booking"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: "Deleted"
 components:
   schemas:
     FeatureDTO:
@@ -188,6 +273,38 @@ components:
           format: int64
         active:
           type: boolean
+    BookingDTO:
+      type: object
+      required:
+        - propertyId
+        - userId
+        - startAt
+        - endAt
+        - status
+      properties:
+        id:
+          type: integer
+          format: int64
+        propertyId:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        startAt:
+          type: string
+          format: date-time
+        endAt:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/BookingStatus'
+    BookingStatus:
+      type: string
+      enum:
+        - PENDING
+        - CONFIRMED
+        - CANCELLED
     UserRole:
       type: string
       enum:
