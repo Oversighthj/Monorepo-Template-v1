@@ -19,4 +19,8 @@ public class UserService {
   public List<UserEntity> findAll() {
     return userRepository.findAllByOrderByIdAsc();
   }
+
+  public UserEntity findById(Long id) {
+    return userRepository.findById(id).orElse(null);
+  }
 }

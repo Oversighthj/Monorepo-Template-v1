@@ -17,6 +17,12 @@ public class BookingService {
   }
 
   public BookingEntity create(BookingEntity booking) {
+    List<BookingEntity> overlaps =
+        findOverlapping(
+            booking.getProperty().getId(), booking.getStart(), booking.getEnd(), null);
+    if (!overlaps.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Booking overlaps");
+    }
     return bookingRepository.save(booking);
   }
 
@@ -27,6 +33,10 @@ public class BookingService {
 
   public List<BookingEntity> findOverlapping(Long propertyId, LocalDateTime start, LocalDateTime end, Long excludeId) {
     return bookingRepository.findOverlapping(propertyId, start, end, excludeId);
+  }
+
+  public List<BookingEntity> findByPropertyId(Long propertyId) {
+    return bookingRepository.findByPropertyId(propertyId);
   }
 
   public BookingEntity update(BookingEntity booking) {

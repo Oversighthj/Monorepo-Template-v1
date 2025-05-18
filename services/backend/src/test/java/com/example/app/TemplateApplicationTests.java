@@ -40,4 +40,38 @@ public class TemplateApplicationTests {
         .andExpect(jsonPath("$[0].email").value("a@example.com"))
         .andExpect(jsonPath("$[0].passwordHash").doesNotExist());
   }
+
+  @Test
+  public void testCreateAndListBookings() throws Exception {
+    // create user
+    String userBody =
+        "{\"role\":\"GUEST\",\"email\":\"b@example.com\",\"passwordHash\":\"hash\"}";
+    mockMvc
+        .perform(post("/users").contentType("application/json").content(userBody))
+        .andExpect(status().isCreated());
+
+    // create property
+    String propBody = "{\"name\":\"Test\",\"address\":\"Addr\"}";
+    mockMvc
+        .perform(post("/properties").contentType("application/json").content(propBody))
+        .andExpect(status().isCreated());
+
+    String booking =
+        "{\"propertyId\":1,\"userId\":1,\"startAt\":\"2024-01-01T00:00:00\",\"endAt\":\"2024-01-05T00:00:00\",\"status\":\"NEW\"}";
+    mockMvc
+        .perform(post("/bookings").contentType("application/json").content(booking))
+        .andExpect(status().isCreated());
+
+    String overlap =
+        "{\"propertyId\":1,\"userId\":1,\"startAt\":\"2024-01-03T00:00:00\",\"endAt\":\"2024-01-06T00:00:00\",\"status\":\"NEW\"}";
+    mockMvc
+        .perform(post("/bookings").contentType("application/json").content(overlap))
+        .andExpect(status().isConflict());
+
+    mockMvc
+        .perform(get("/bookings").param("propertyId", "1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].propertyId").value(1))
+        .andExpect(jsonPath("$[0].startAt").value("2024-01-01T00:00:00"));
+  }
 }
