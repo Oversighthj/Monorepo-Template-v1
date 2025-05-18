@@ -12,11 +12,11 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
       "SELECT b FROM BookingEntity b "
           + "WHERE b.property.id = :propertyId "
           + "AND (:excludeId IS NULL OR b.id <> :excludeId) "
-          + "AND b.start < :end "
-          + "AND b.end > :start")
+          + "AND b.startAt < :endAt "
+          + "AND b.endAt > :startAt")
   List<BookingEntity> findOverlapping(
       @Param("propertyId") Long propertyId,
-      @Param("start") LocalDateTime start,
-      @Param("end") LocalDateTime end,
+      @Param("startAt") LocalDateTime startAt,
+      @Param("endAt") LocalDateTime endAt,
       @Param("excludeId") Long excludeId);
 }

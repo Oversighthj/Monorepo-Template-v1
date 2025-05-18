@@ -9,7 +9,6 @@ servers:
   - url: http://localhost:8080/api
     description: Local dev
 
-# تشمل الوثيقة المسارات الحالية مثل /feature و /status و /users و /properties
 paths:
   /feature:
     get:
@@ -173,8 +172,7 @@ components:
         - passwordHash
     PropertyDTO:
       type: object
-      required:
-        - ownerId
+      required: [ownerId]
       properties:
         id:
           type: integer
