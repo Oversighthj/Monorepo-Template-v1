@@ -63,10 +63,101 @@ paths:
       responses:
         '201':
           description: "Created"
-components:
-  schemas:
-    FeatureDTO:
-      type: object
+  /properties:
+    post:
+      tags:
+        - Property
+      summary: "Create property"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyDTO'
+      responses:
+        '201':
+          description: "Created"
+    get:
+      tags:
+        - Property
+      summary: "List properties"
+      parameters:
+        - in: query
+          name: ownerId
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PropertyDTO'
+  /properties/{id}:
+    get:
+      tags:
+        - Property
+      summary: "Get property"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyDTO'
+    put:
+      tags:
+        - Property
+      summary: "Update property"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyDTO'
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PropertyDTO'
+    delete:
+      tags:
+        - Property
+      summary: "Delete property"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: "Deleted"
+  components:
+    schemas:
+      FeatureDTO:
+        type: object
       properties:
         id:
           type: integer
@@ -96,3 +187,20 @@ components:
         - GUEST
         - ADMIN
         - CLEANER
+    PropertyDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        address:
+          type: string
+        ownerId:
+          type: integer
+          format: int64
+      required:
+        - name
+        - address
+        - ownerId
