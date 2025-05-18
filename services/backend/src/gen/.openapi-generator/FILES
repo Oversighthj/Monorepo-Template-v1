@@ -4,3 +4,4 @@ pom.xml
 src/gen/org/openapitools/api/ApiUtil.java
 src/gen/org/openapitools/api/DefaultApi.java
 src/gen/org/openapitools/model/FeatureDTO.java
+src/gen/org/openapitools/model/UserDTO.java

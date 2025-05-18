@@ -40,9 +40,44 @@ paths:
               schema:
                 type: string
               example: "alive"
+  /users:
+    get:
+      summary: "Get user list"
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+    post:
+      summary: "Create user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+      responses:
+        '201':
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
 components:
   schemas:
     FeatureDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    UserDTO:
       type: object
       properties:
         id:
