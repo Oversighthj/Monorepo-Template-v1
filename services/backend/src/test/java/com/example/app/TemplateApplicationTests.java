@@ -40,4 +40,19 @@ public class TemplateApplicationTests {
         .andExpect(jsonPath("$[0].email").value("a@example.com"))
         .andExpect(jsonPath("$[0].passwordHash").doesNotExist());
   }
+
+  @Test
+  public void testCreateAndListProperties() throws Exception {
+    String userBody = "{\"role\":\"GUEST\",\"email\":\"prop@example.com\",\"passwordHash\":\"x\"}";
+    mockMvc.perform(post("/users").contentType("application/json").content(userBody))
+        .andExpect(status().isCreated());
+
+    String propBody = "{\"name\":\"House\",\"address\":\"123 St\",\"ownerId\":1}";
+    mockMvc.perform(post("/properties").contentType("application/json").content(propBody))
+        .andExpect(status().isCreated());
+
+    mockMvc.perform(get("/properties").param("ownerId", "1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].name").value("House"));
+  }
 }
