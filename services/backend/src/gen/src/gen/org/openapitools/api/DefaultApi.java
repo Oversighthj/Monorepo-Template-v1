@@ -7,6 +7,7 @@ package org.openapitools.api;
 
 import org.openapitools.model.FeatureDTO;
 import org.openapitools.model.UserDTO;
+import org.openapitools.model.PropertyDTO;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -133,6 +134,125 @@ public interface DefaultApi {
     )
     ResponseEntity<Void> usersPost(
         @Parameter(name = "UserDTO", required = true) @Valid @RequestBody UserDTO userDTO
+    );
+
+    /**
+     * POST /properties : Create property
+     *
+     * @param propertyDTO  (required)
+     * @return Created (status code 201)
+     */
+    @Operation(
+        operationId = "propertiesPost",
+        summary = "Create property",
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Created")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = "/properties",
+        consumes = { "application/json" }
+    )
+    ResponseEntity<Void> propertiesPost(
+        @Parameter(name = "PropertyDTO", required = true) @Valid @RequestBody PropertyDTO propertyDTO
+    );
+
+    /**
+     * GET /properties : List properties
+     *
+     * @param ownerId  (optional)
+     * @return Success (status code 200)
+     */
+    @Operation(
+        operationId = "propertiesGet",
+        summary = "List properties",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PropertyDTO.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/properties",
+        produces = { "application/json" }
+    )
+    ResponseEntity<List<PropertyDTO>> propertiesGet(
+        @Parameter(name = "ownerId", in = ParameterIn.QUERY) @Valid @RequestParam(value = "ownerId", required = false) Long ownerId
+    );
+
+    /**
+     * GET /properties/{id} : Get property
+     *
+     * @param id  (required)
+     * @return Success (status code 200)
+     */
+    @Operation(
+        operationId = "propertiesIdGet",
+        summary = "Get property",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = PropertyDTO.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Not found")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/properties/{id}",
+        produces = { "application/json" }
+    )
+    ResponseEntity<PropertyDTO> propertiesIdGet(
+        @Parameter(name = "id", required = true) @PathVariable("id") Long id
+    );
+
+    /**
+     * PUT /properties/{id} : Update property
+     *
+     * @param id  (required)
+     * @param propertyDTO  (required)
+     * @return Success (status code 200)
+     */
+    @Operation(
+        operationId = "propertiesIdPut",
+        summary = "Update property",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = PropertyDTO.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/properties/{id}",
+        consumes = { "application/json" },
+        produces = { "application/json" }
+    )
+    ResponseEntity<PropertyDTO> propertiesIdPut(
+        @Parameter(name = "id", required = true) @PathVariable("id") Long id,
+        @Parameter(name = "PropertyDTO", required = true) @Valid @RequestBody PropertyDTO propertyDTO
+    );
+
+    /**
+     * DELETE /properties/{id} : Delete property
+     *
+     * @param id  (required)
+     * @return No Content (status code 204)
+     */
+    @Operation(
+        operationId = "propertiesIdDelete",
+        summary = "Delete property",
+        responses = {
+            @ApiResponse(responseCode = "204", description = "Deleted")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = "/properties/{id}"
+    )
+    ResponseEntity<Void> propertiesIdDelete(
+        @Parameter(name = "id", required = true) @PathVariable("id") Long id
     );
 
 }
