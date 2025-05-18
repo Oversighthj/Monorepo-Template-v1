@@ -25,8 +25,9 @@ public class BookingService {
     return entity.orElse(null);
   }
 
-  public List<BookingEntity> findOverlapping(Long propertyId, LocalDateTime start, LocalDateTime end, Long excludeId) {
-    return bookingRepository.findOverlapping(propertyId, start, end, excludeId);
+  public List<BookingEntity> findOverlapping(
+      Long propertyId, LocalDateTime startAt, LocalDateTime endAt, Long excludeId) {
+    return bookingRepository.findOverlapping(propertyId, startAt, endAt, excludeId);
   }
 
   public BookingEntity update(BookingEntity booking) {
@@ -38,14 +39,17 @@ public class BookingService {
       return null;
     }
     BookingEntity existing = existingOpt.get();
-    boolean startChanged = booking.getStart() != null && !booking.getStart().equals(existing.getStart());
-    boolean endChanged = booking.getEnd() != null && !booking.getEnd().equals(existing.getEnd());
+    boolean startChanged =
+        booking.getStartAt() != null && !booking.getStartAt().equals(existing.getStartAt());
+    boolean endChanged =
+        booking.getEndAt() != null && !booking.getEndAt().equals(existing.getEndAt());
     Long existingPropId = existing.getProperty() != null ? existing.getProperty().getId() : null;
     Long newPropId = booking.getProperty() != null ? booking.getProperty().getId() : null;
     boolean propertyChanged = (existingPropId != null ? !existingPropId.equals(newPropId) : newPropId != null);
 
     if (startChanged || endChanged || propertyChanged) {
-      List<BookingEntity> overlaps = findOverlapping(newPropId, booking.getStart(), booking.getEnd(), booking.getId());
+      List<BookingEntity> overlaps =
+          findOverlapping(newPropId, booking.getStartAt(), booking.getEndAt(), booking.getId());
       if (!overlaps.isEmpty()) {
         throw new ResponseStatusException(HttpStatus.CONFLICT, "Booking overlaps");
       }
@@ -53,8 +57,8 @@ public class BookingService {
 
     existing.setProperty(booking.getProperty());
     existing.setUser(booking.getUser());
-    existing.setStart(booking.getStart());
-    existing.setEnd(booking.getEnd());
+    existing.setStartAt(booking.getStartAt());
+    existing.setEndAt(booking.getEndAt());
     existing.setStatus(booking.getStatus());
 
     return bookingRepository.save(existing);

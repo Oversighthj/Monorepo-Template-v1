@@ -29,10 +29,11 @@ public class BookingEntity {
   @JoinColumn(name = "user_id")
   private UserEntity user;
 
-  private LocalDateTime start;
+  @Column(name = "start_at")
+  private LocalDateTime startAt;
 
-  @Column(name = "end")
-  private LocalDateTime end;
+  @Column(name = "end_at")
+  private LocalDateTime endAt;
 
   private String status;
 
@@ -42,14 +43,14 @@ public class BookingEntity {
       Long id,
       PropertyEntity property,
       UserEntity user,
-      LocalDateTime start,
-      LocalDateTime end,
+      LocalDateTime startAt,
+      LocalDateTime endAt,
       String status) {
     this.id = id;
     this.property = property;
     this.user = user;
-    this.start = start;
-    this.end = end;
+    this.startAt = startAt;
+    this.endAt = endAt;
     this.status = status;
   }
 
@@ -77,20 +78,20 @@ public class BookingEntity {
     this.user = user;
   }
 
-  public LocalDateTime getStart() {
-    return start;
+  public LocalDateTime getStartAt() {
+    return startAt;
   }
 
-  public void setStart(LocalDateTime start) {
-    this.start = start;
+  public void setStartAt(LocalDateTime startAt) {
+    this.startAt = startAt;
   }
 
-  public LocalDateTime getEnd() {
-    return end;
+  public LocalDateTime getEndAt() {
+    return endAt;
   }
 
-  public void setEnd(LocalDateTime end) {
-    this.end = end;
+  public void setEndAt(LocalDateTime endAt) {
+    this.endAt = endAt;
   }
 
   public String getStatus() {
