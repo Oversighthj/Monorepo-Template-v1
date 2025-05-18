@@ -1,9 +1,11 @@
 package com.example.app.user;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +22,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+
+@Entity
+@Table(name = "USERS")
 public class UserEntity {
 
   @Id
@@ -36,4 +43,47 @@ public class UserEntity {
   private String passwordHash;
 
   // Lombok generates constructors and accessors
+  private String email;
+  private String passwordHash;
+
+  public UserEntity() {}
+
+  public UserEntity(Long id, UserRole role, String email, String passwordHash) {
+    this.id = id;
+    this.role = role;
+    this.email = email;
+    this.passwordHash = passwordHash;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public UserRole getRole() {
+    return role;
+  }
+
+  public void setRole(UserRole role) {
+    this.role = role;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPasswordHash() {
+    return passwordHash;
+  }
+
+  public void setPasswordHash(String passwordHash) {
+    this.passwordHash = passwordHash;
+  }
 }

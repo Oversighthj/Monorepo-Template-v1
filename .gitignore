@@ -92,3 +92,6 @@ patches/
 node_modules/
 **/build/
 **/.dart_tool/
+
+# build output
+target/
