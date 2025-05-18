@@ -173,6 +173,8 @@ components:
         - passwordHash
     PropertyDTO:
       type: object
+      required:
+        - ownerId
       properties:
         id:
           type: integer
