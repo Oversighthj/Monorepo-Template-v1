@@ -17,6 +17,6 @@ public class UserService {
   }
 
   public List<UserEntity> findAll() {
-    return userRepository.findAll();
+    return userRepository.findAllByOrderByIdAsc();
   }
 }
