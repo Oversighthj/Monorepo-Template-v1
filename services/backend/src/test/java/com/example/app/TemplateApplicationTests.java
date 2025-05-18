@@ -2,6 +2,7 @@ package com.example.app;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Test;
@@ -39,5 +40,20 @@ public class TemplateApplicationTests {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].email").value("a@example.com"))
         .andExpect(jsonPath("$[0].passwordHash").doesNotExist());
+  }
+
+  @Test
+  public void testCreateAndListProperties() throws Exception {
+    String userBody = "{\"role\":\"GUEST\",\"email\":\"owner@example.com\",\"passwordHash\":\"h\"}";
+    mockMvc.perform(post("/users").contentType("application/json").content(userBody))
+        .andExpect(status().isCreated());
+
+    String propBody = "{\"name\":\"House\",\"address\":\"123 St\",\"ownerId\":1}";
+    mockMvc.perform(post("/properties").contentType("application/json").content(propBody))
+        .andExpect(status().isCreated());
+
+    mockMvc.perform(get("/properties").param("ownerId", "1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].name").value("House"));
   }
 }
