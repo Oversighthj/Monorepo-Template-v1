@@ -31,4 +31,28 @@ public interface TaskApi {
     ResponseEntity<List<TaskDTO>> tasksGet(
             @Parameter(name = "bookingId") @RequestParam(value = "bookingId", required = false) Long bookingId,
             @Parameter(name = "cleanerId") @RequestParam(value = "cleanerId", required = false) Long cleanerId);
+
+    @Operation(operationId = "tasksIdGet", summary = "Get task", responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = TaskDTO.class))
+            })
+    })
+    @RequestMapping(method = RequestMethod.GET, value = "/tasks/{id}", produces = {"application/json"})
+    ResponseEntity<TaskDTO> tasksIdGet(@Parameter(name = "id", required = true) @PathVariable("id") Long id);
+
+    @Operation(operationId = "tasksIdPut", summary = "Update task", responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = TaskDTO.class))
+            })
+    })
+    @RequestMapping(method = RequestMethod.PUT, value = "/tasks/{id}", consumes = {"application/json"}, produces = {"application/json"})
+    ResponseEntity<TaskDTO> tasksIdPut(
+            @Parameter(name = "id", required = true) @PathVariable("id") Long id,
+            @Parameter(name = "TaskDTO", required = true) @Valid @RequestBody TaskDTO taskDTO);
+
+    @Operation(operationId = "tasksIdDelete", summary = "Delete task", responses = {
+            @ApiResponse(responseCode = "204", description = "Deleted")
+    })
+    @RequestMapping(method = RequestMethod.DELETE, value = "/tasks/{id}")
+    ResponseEntity<Void> tasksIdDelete(@Parameter(name = "id", required = true) @PathVariable("id") Long id);
 }

@@ -40,14 +40,14 @@ public class TaskController implements TaskApi {
                 booking,
                 cleaner,
                 dto.getType(),
-                TaskStatus.PENDING,                    // default status
+                TaskStatus.PENDING,                     // default
                 dto.getDue().toLocalDateTime()
         );
         taskService.create(entity);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    /* ---------- GET /tasks (list + filters) ---------- */
+    /* ---------- GET /tasks (list + optional filters) ---------- */
     @Override
     public ResponseEntity<List<TaskDTO>> tasksGet(Long bookingId, Long cleanerId) {
         List<TaskDTO> list = taskService.findAll().stream()
@@ -58,26 +58,50 @@ public class TaskController implements TaskApi {
         return ResponseEntity.ok(list);
     }
 
+    /* ---------- GET /tasks/{id} ---------- */
+    @Override
+    public ResponseEntity<TaskDTO> tasksIdGet(Long id) {
+        TaskEntity e = taskService.findById(id);
+        if (e == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(toDto(e));
+    }
+
     /* ---------- PUT /tasks/{id} ---------- */
     @Override
     public ResponseEntity<TaskDTO> tasksIdPut(Long id,
                                               @Valid @RequestBody TaskDTO dto) {
-        // TODO implement real update logic in T5
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
-    }
 
-    /* ---------- GET /tasks/{id} ---------- */
-    @Override
-    public ResponseEntity<TaskDTO> tasksIdGet(Long id) {
-        // TODO implement real get-by-id logic in T5
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        BookingEntity booking = bookingService.findById(dto.getBookingId());
+        if (booking == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking not found");
+        }
+
+        UserEntity cleaner = userRepository.findById(dto.getCleanerId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cleaner not found"));
+
+        TaskEntity entity = new TaskEntity(
+                id,
+                booking,
+                cleaner,
+                dto.getType(),
+                TaskStatus.valueOf(dto.getStatus().name()),
+                dto.getDue().toLocalDateTime()
+        );
+
+        TaskEntity updated = taskService.update(entity);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(toDto(updated));
     }
 
     /* ---------- DELETE /tasks/{id} ---------- */
     @Override
     public ResponseEntity<Void> tasksIdDelete(Long id) {
-        // TODO implement real delete logic in T5
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        taskService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     /* ---------- helper mapper ---------- */
