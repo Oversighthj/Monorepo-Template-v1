@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest(classes = TemplateApplication.class)
 @AutoConfigureMockMvc
+@org.springframework.transaction.annotation.Transactional   // rollback after each test
 class TaskControllerIntegrationTest {
 
     @Autowired MockMvc mockMvc;
