@@ -14,15 +14,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.app.user.UserRepository;
 
 @RestController
 @RequestMapping("/properties")
 public class PropertyController {
 
   private final PropertyService propertyService;
+  private final UserRepository userRepository;
 
-  public PropertyController(PropertyService propertyService) {
+  public PropertyController(PropertyService propertyService, UserRepository userRepository) {
     this.propertyService = propertyService;
+    this.userRepository = userRepository;
   }
 
   @PostMapping
@@ -30,7 +33,14 @@ public class PropertyController {
     PropertyEntity entity = new PropertyEntity();
     entity.setName(dto.getName());
     entity.setAddress(dto.getAddress());
-    // owner not set due to simplification
+    if (dto.getOwnerId() == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    var owner = userRepository.findById(dto.getOwnerId());
+    if (owner.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    entity.setOwner(owner.get());
     propertyService.create(entity);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
@@ -76,6 +86,9 @@ public class PropertyController {
     dto.setId(entity.getId());
     dto.setName(entity.getName());
     dto.setAddress(entity.getAddress());
+    if (entity.getOwner() != null) {
+      dto.setOwnerId(entity.getOwner().getId());
+    }
     return dto;
   }
 }

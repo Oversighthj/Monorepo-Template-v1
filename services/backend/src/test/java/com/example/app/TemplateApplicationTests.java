@@ -21,7 +21,7 @@ public class TemplateApplicationTests {
   public void testGetFeatureReturnsList() throws Exception {
     // تنفيذ طلب GET إلى '/feature' والتحقق من حالة 200 ومن صحة المحتوى المتوقع
     mockMvc
-        .perform(get("/feature"))
+        .perform(get("/api/feature"))
         .andExpect(status().isOk())
         .andExpect(content().json("[{\"id\":1,\"name\":\"Sample feature\"}]"));
   }
@@ -31,11 +31,11 @@ public class TemplateApplicationTests {
     String body = "{\"role\":\"GUEST\",\"email\":\"a@example.com\",\"passwordHash\":\"hash\"}";
 
     mockMvc
-        .perform(post("/users").contentType("application/json").content(body))
+        .perform(post("/api/users").contentType("application/json").content(body))
         .andExpect(status().isCreated());
 
     mockMvc
-        .perform(get("/users"))
+        .perform(get("/api/users"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].email").value("a@example.com"))
         .andExpect(jsonPath("$[0].passwordHash").doesNotExist());
