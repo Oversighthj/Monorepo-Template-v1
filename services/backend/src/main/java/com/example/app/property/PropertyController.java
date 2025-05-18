@@ -27,11 +27,7 @@ public class PropertyController {
 
   @PostMapping
   public ResponseEntity<Void> create(@Valid @RequestBody PropertyDTO dto) {
-    PropertyEntity entity = new PropertyEntity();
-    entity.setName(dto.getName());
-    entity.setAddress(dto.getAddress());
-    // owner not set due to simplification
-    propertyService.create(entity);
+    propertyService.create(dto);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
@@ -76,6 +72,7 @@ public class PropertyController {
     dto.setId(entity.getId());
     dto.setName(entity.getName());
     dto.setAddress(entity.getAddress());
+    dto.setOwnerId(entity.getOwner() != null ? entity.getOwner().getId() : null);
     return dto;
   }
 }

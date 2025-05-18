@@ -1,10 +1,12 @@
 package com.example.app.property;
 
+import jakarta.validation.constraints.NotNull;
+
 public class PropertyDTO {
   private Long id;
   private String name;
   private String address;
-  private Long ownerId;
+  @NotNull private Long ownerId;
 
   public Long getId() {
     return id;

@@ -2,6 +2,7 @@ package com.example.app;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Test;
@@ -39,5 +40,32 @@ public class TemplateApplicationTests {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].email").value("a@example.com"))
         .andExpect(jsonPath("$[0].passwordHash").doesNotExist());
+  }
+
+  @Test
+  public void testBookingOverlap() throws Exception {
+    String owner = "{\"role\":\"ADMIN\",\"email\":\"owner@example.com\",\"passwordHash\":\"hash\"}";
+    mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(owner))
+        .andExpect(status().isCreated());
+
+    String guest = "{\"role\":\"GUEST\",\"email\":\"guest@example.com\",\"passwordHash\":\"hash\"}";
+    mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(guest))
+        .andExpect(status().isCreated());
+
+    String property = "{\"name\":\"House\",\"address\":\"addr\",\"ownerId\":1}";
+    mockMvc.perform(post("/properties").contentType(MediaType.APPLICATION_JSON).content(property))
+        .andExpect(status().isCreated());
+
+    String booking1 = "{\"propertyId\":1,\"userId\":2,\"start\":\"2024-01-01T10:00:00\",\"end\":\"2024-01-02T10:00:00\",\"status\":\"CONFIRMED\"}";
+    mockMvc.perform(post("/bookings").contentType(MediaType.APPLICATION_JSON).content(booking1))
+        .andExpect(status().isCreated());
+
+    String booking2 = "{\"propertyId\":1,\"userId\":2,\"start\":\"2024-01-01T12:00:00\",\"end\":\"2024-01-02T09:00:00\",\"status\":\"CONFIRMED\"}";
+    mockMvc.perform(post("/bookings").contentType(MediaType.APPLICATION_JSON).content(booking2))
+        .andExpect(status().isConflict());
+
+    mockMvc.perform(get("/bookings").param("propertyId", "1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].userId").value(2));
   }
 }
