@@ -11,9 +11,8 @@ Future<void> initServiceLocator() async {
     () => NetworkInfoImpl(connectivity: sl()),
   );
   sl.registerLazySingleton(() => Connectivity());
-  sl.registerLazySingleton<ApiClient>(() => ApiClient(baseUrl: 'http://localhost:8080'));
+  sl.registerLazySingleton<ApiClient>(
+      () => ApiClient(baseUrl: 'http://localhost:8080'));
 }
-
-
 
 //sl.registerLazySingleton<ApiClient>(() => ApiClient(baseUrl: 'http://192.168.100.2:3000'));

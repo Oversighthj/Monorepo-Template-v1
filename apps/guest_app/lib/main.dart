@@ -6,11 +6,11 @@ import 'routes/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.initServiceLocator();           // تهيئة GetIt أو أي DI آخر
+  await di.initServiceLocator(); // تهيئة GetIt أو أي DI آخر
 
   runApp(
     const ProviderScope(
-      child: GuestApp(),                   // يمكنك لاحقاً تغيير الاسم إلى TemplateApp
+      child: GuestApp(), // يمكنك لاحقاً تغيير الاسم إلى TemplateApp
     ),
   );
 }
@@ -21,9 +21,9 @@ class GuestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Guest App',                  // عدّل العنوان إذا أردت
+      title: 'Guest App', // عدّل العنوان إذا أردت
       theme: ThemeData(useMaterial3: true),
-      routerConfig: router,                // يأتي من app_router.dart
+      routerConfig: router, // يأتي من app_router.dart
     );
   }
 }

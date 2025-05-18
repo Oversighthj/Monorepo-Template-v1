@@ -8,13 +8,12 @@ import com.example.app.property.PropertyRepository;
 import com.example.app.user.UserEntity;
 import com.example.app.user.UserRepository;
 import com.example.app.user.UserRole;
-import com.example.app.booking.BookingStatus;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @SpringBootTest

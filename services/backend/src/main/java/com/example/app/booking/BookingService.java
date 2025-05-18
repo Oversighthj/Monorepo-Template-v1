@@ -51,7 +51,8 @@ public class BookingService {
         booking.getEndAt() != null && !booking.getEndAt().equals(existing.getEndAt());
     Long existingPropId = existing.getProperty() != null ? existing.getProperty().getId() : null;
     Long newPropId = booking.getProperty() != null ? booking.getProperty().getId() : null;
-    boolean propertyChanged = (existingPropId != null ? !existingPropId.equals(newPropId) : newPropId != null);
+    boolean propertyChanged =
+        (existingPropId != null ? !existingPropId.equals(newPropId) : newPropId != null);
 
     if (startChanged || endChanged || propertyChanged) {
       List<BookingEntity> overlaps =

@@ -3,6 +3,8 @@ package com.example.app.task;
 import com.example.app.booking.BookingEntity;
 import com.example.app.user.UserEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,9 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-import com.example.app.task.TaskStatus;
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,6 +34,7 @@ public class TaskEntity {
 
   @Enumerated(EnumType.STRING)
   private TaskStatus status;
+
   private LocalDateTime due;
 
   public TaskEntity() {}

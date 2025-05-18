@@ -37,9 +37,8 @@ public class PropertyController {
 
   @GetMapping
   public ResponseEntity<List<PropertyDTO>> list(@RequestParam(required = false) Long ownerId) {
-    List<PropertyEntity> entities = ownerId != null
-        ? propertyService.findByOwnerId(ownerId)
-        : propertyService.findAll();
+    List<PropertyEntity> entities =
+        ownerId != null ? propertyService.findByOwnerId(ownerId) : propertyService.findAll();
     List<PropertyDTO> dtos = entities.stream().map(this::toDto).collect(Collectors.toList());
     return ResponseEntity.ok(dtos);
   }
@@ -54,7 +53,8 @@ public class PropertyController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<PropertyDTO> update(@PathVariable Long id, @Valid @RequestBody PropertyDTO dto) {
+  public ResponseEntity<PropertyDTO> update(
+      @PathVariable Long id, @Valid @RequestBody PropertyDTO dto) {
     PropertyEntity entity = propertyService.findById(id);
     if (entity == null) {
       return ResponseEntity.notFound().build();

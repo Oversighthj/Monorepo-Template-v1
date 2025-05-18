@@ -1,12 +1,12 @@
 package com.example.app.user;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
 
 @Entity
 @Table(name = "USERS")
@@ -18,6 +18,7 @@ public class UserEntity {
 
   @Enumerated(EnumType.STRING)
   private UserRole role;
+
   private String email;
   private String passwordHash;
 

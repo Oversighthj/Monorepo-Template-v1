@@ -13,11 +13,9 @@ void main() {
   // Binding لاختبارات التكامل
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets(
-    'full CRUD flow',
-    (WidgetTester tester) async {
+  testWidgets('full CRUD flow', (WidgetTester tester) async {
     // 1. شغّل التطبيق
-    app.main(); 
+    app.main();
     await tester.pumpAndSettle();
 
     // 2. تأكد الصفحة الأساسية تحتوي على العنوان "Users"
