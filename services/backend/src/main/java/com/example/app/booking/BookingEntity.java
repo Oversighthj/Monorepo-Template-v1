@@ -33,6 +33,10 @@ public class BookingEntity {
   private LocalDateTime startAt;
 
   @Column(name = "end")
+  @Column(name = "start_at")
+  private LocalDateTime startAt;
+
+  @Column(name = "end_at")
   private LocalDateTime endAt;
 
   private String status;

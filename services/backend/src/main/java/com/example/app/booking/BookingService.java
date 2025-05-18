@@ -25,7 +25,12 @@ public class BookingService {
     return entity.orElse(null);
   }
 
+
   public List<BookingEntity> findOverlapping(Long propertyId, LocalDateTime startAt, LocalDateTime endAt, Long excludeId) {
+
+  public List<BookingEntity> findOverlapping(
+      Long propertyId, LocalDateTime startAt, LocalDateTime endAt, Long excludeId) {
+
     return bookingRepository.findOverlapping(propertyId, startAt, endAt, excludeId);
   }
 
@@ -38,14 +43,26 @@ public class BookingService {
       return null;
     }
     BookingEntity existing = existingOpt.get();
+
     boolean startChanged = booking.getStartAt() != null && !booking.getStartAt().equals(existing.getStartAt());
     boolean endChanged = booking.getEndAt() != null && !booking.getEndAt().equals(existing.getEndAt());
+
+    boolean startChanged =
+        booking.getStartAt() != null && !booking.getStartAt().equals(existing.getStartAt());
+    boolean endChanged =
+        booking.getEndAt() != null && !booking.getEndAt().equals(existing.getEndAt());
+
     Long existingPropId = existing.getProperty() != null ? existing.getProperty().getId() : null;
     Long newPropId = booking.getProperty() != null ? booking.getProperty().getId() : null;
     boolean propertyChanged = (existingPropId != null ? !existingPropId.equals(newPropId) : newPropId != null);
 
     if (startChanged || endChanged || propertyChanged) {
+
       List<BookingEntity> overlaps = findOverlapping(newPropId, booking.getStartAt(), booking.getEndAt(), booking.getId());
+
+      List<BookingEntity> overlaps =
+          findOverlapping(newPropId, booking.getStartAt(), booking.getEndAt(), booking.getId());
+
       if (!overlaps.isEmpty()) {
         throw new ResponseStatusException(HttpStatus.CONFLICT, "Booking overlaps");
       }
