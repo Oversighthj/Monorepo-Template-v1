@@ -13,10 +13,12 @@ public class MessageEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  /* FK → BOOKINGS(id)  */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "booking_id", nullable = false)
   private BookingEntity booking;
 
+  /* FK → USERS(id) (sender) */
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "sender_id", nullable = false)
   private UserEntity sender;

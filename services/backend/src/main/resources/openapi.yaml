@@ -9,12 +9,10 @@ servers:
   - url: http://localhost:8080/api
     description: Local dev
 
-# تشمل الوثيقة المسارات الحالية مثل /feature و /status و /users و /properties
 paths:
   /feature:
     get:
       summary: "Get feature list"
-      description: "Returns a list of features."
       responses:
         '200':
           description: "Success"
@@ -24,22 +22,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/FeatureDTO'
-              example:
-                - id: 1
-                  name: "Sample feature"
-  # مسار اختياري لفحص حالة التطبيق
+
   /status:
     get:
       summary: "Status check"
-      description: "Returns 'alive' to indicate service is running."
       responses:
         '200':
           description: "Success"
           content:
             text/plain:
-              schema:
-                type: string
-              example: "alive"
+              schema: {type: string}
+
   /users:
     get:
       summary: "Get user list"
@@ -61,8 +54,8 @@ paths:
             schema:
               $ref: '#/components/schemas/UserDTO'
       responses:
-        '201':
-          description: "Created"
+        '201': {description: "Created"}
+
   /properties:
     post:
       summary: "Create property"
@@ -73,17 +66,13 @@ paths:
             schema:
               $ref: '#/components/schemas/PropertyDTO'
       responses:
-        '201':
-          description: "Created"
+        '201': {description: "Created"}
     get:
       summary: "Get property list"
       parameters:
-        - name: ownerId
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int64
+        - in: query
+          name: ownerId
+          schema: {type: integer, format: int64}
       responses:
         '200':
           description: "Success"
@@ -93,16 +82,15 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PropertyDTO'
+
   /properties/{id}:
     get:
       summary: "Get property"
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       responses:
         '200':
           description: "Success"
@@ -113,12 +101,10 @@ paths:
     put:
       summary: "Update property"
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       requestBody:
         required: true
         content:
@@ -135,15 +121,13 @@ paths:
     delete:
       summary: "Delete property"
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       responses:
-        '204':
-          description: "Deleted"
+        '204': {description: "Deleted"}
+
   /bookings:
     post:
       tags: [Booking]
@@ -155,22 +139,17 @@ paths:
             schema:
               $ref: '#/components/schemas/BookingDTO'
       responses:
-        '201':
-          description: "Created"
+        '201': {description: "Created"}
     get:
       tags: [Booking]
       summary: "Get booking list"
       parameters:
         - in: query
           name: propertyId
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
         - in: query
           name: userId
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       responses:
         '200':
           description: "Success"
@@ -180,17 +159,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/BookingDTO'
+
   /bookings/{id}:
     get:
       tags: [Booking]
       summary: "Get booking"
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       responses:
         '200':
           description: "Success"
@@ -202,12 +180,10 @@ paths:
       tags: [Booking]
       summary: "Update booking"
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       requestBody:
         required: true
         content:
@@ -225,15 +201,12 @@ paths:
       tags: [Booking]
       summary: "Delete booking"
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       responses:
-        '204':
-          description: "Deleted"
+        '204': {description: "Deleted"}
 
   /tasks:
     post:
@@ -246,24 +219,17 @@ paths:
             schema:
               $ref: '#/components/schemas/TaskDTO'
       responses:
-        '201':
-          description: "Created"
+        '201': {description: "Created"}
     get:
       tags: [Task]
       summary: "Get task list"
       parameters:
         - in: query
           name: bookingId
-          required: false
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
         - in: query
           name: cleanerId
-          required: false
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       responses:
         '200':
           description: "Success"
@@ -279,12 +245,10 @@ paths:
       tags: [Task]
       summary: "Get task"
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       responses:
         '200':
           description: "Success"
@@ -296,12 +260,10 @@ paths:
       tags: [Task]
       summary: "Update task"
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       requestBody:
         required: true
         content:
@@ -319,15 +281,12 @@ paths:
       tags: [Task]
       summary: "Delete task"
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       responses:
-        '204':
-          description: "Deleted"
+        '204': {description: "Deleted"}
 
   /messages:
     post:
@@ -340,18 +299,14 @@ paths:
             schema:
               $ref: '#/components/schemas/MessageDTO'
       responses:
-        '201':
-          description: "Created"
+        '201': {description: "Created"}
     get:
       tags: [Message]
       summary: "Get message list"
       parameters:
         - in: query
           name: bookingId
-          required: false
-          schema:
-            type: integer
-            format: int64
+          schema: {type: integer, format: int64}
       responses:
         '200':
           description: "Success"
@@ -361,137 +316,74 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MessageDTO'
+
 components:
   schemas:
     FeatureDTO:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
+        id:   {type: integer, format: int64}
+        name: {type: string}
+
     UserDTO:
       type: object
+      required: [role, email, passwordHash]
       properties:
-        id:
-          type: integer
-          format: int64
-        role:
-          $ref: '#/components/schemas/UserRole'
-        email:
-          type: string
-          format: email
-        passwordHash:
-          type: string
-      required:
-        - role
-        - email
-        - passwordHash
+        id:           {type: integer, format: int64}
+        role:         {$ref: '#/components/schemas/UserRole'}
+        email:        {type: string, format: email}
+        passwordHash: {type: string}
+
     PropertyDTO:
       type: object
-      required:
-        - ownerId
+      required: [ownerId]
       properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        address:
-          type: string
-        ownerId:
-          type: integer
-          format: int64
-        active:
-          type: boolean
+        id:       {type: integer, format: int64}
+        name:     {type: string}
+        address:  {type: string}
+        ownerId:  {type: integer, format: int64}
+        active:   {type: boolean}
+
     BookingDTO:
       type: object
-      required:
-        - propertyId
-        - userId
-        - startAt
-        - endAt
-        - status
+      required: [propertyId, userId, startAt, endAt, status]
       properties:
-        id:
-          type: integer
-          format: int64
-        propertyId:
-          type: integer
-          format: int64
-        userId:
-          type: integer
-          format: int64
-        startAt:
-          type: string
-          format: date-time
-        endAt:
-          type: string
-          format: date-time
-        status:
-          $ref: '#/components/schemas/BookingStatus'
+        id:         {type: integer, format: int64}
+        propertyId: {type: integer, format: int64}
+        userId:     {type: integer, format: int64}
+        startAt:    {type: string, format: date-time}
+        endAt:      {type: string, format: date-time}
+        status:     {$ref: '#/components/schemas/BookingStatus'}
+
     BookingStatus:
       type: string
-      enum:
-        - PENDING
-        - CONFIRMED
-        - CANCELLED
+      enum: [PENDING, CONFIRMED, CANCELLED]
+
     TaskDTO:
       type: object
-      required:
-        - bookingId
-        - cleanerId
-        - type
-        - status
-        - due
+      required: [bookingId, cleanerId, type, status, due]
       properties:
-        id:
-          type: integer
-          format: int64
-        bookingId:
-          type: integer
-          format: int64
-        cleanerId:
-          type: integer
-          format: int64
-        type:
-          type: string
-        status:
-          $ref: '#/components/schemas/TaskStatus'
-        due:
-          type: string
-          format: date-time
+        id:        {type: integer, format: int64}
+        bookingId: {type: integer, format: int64}
+        cleanerId: {type: integer, format: int64}
+        type:      {type: string}
+        status:    {$ref: '#/components/schemas/TaskStatus'}
+        due:       {type: string, format: date-time}
+
     TaskStatus:
       type: string
-      enum:
-        - PENDING
-        - DONE
+      enum: [PENDING, DONE]
+
     MessageDTO:
       type: object
-      required:
-        - bookingId
-        - senderId
-        - content
-        - sentAt
+      required: [bookingId, senderId, content, sentAt]
       properties:
-        id:
-          type: integer
-          format: int64
-        bookingId:
-          type: integer
-          format: int64
-        senderId:
-          type: integer
-          format: int64
-        content:
-          type: string
-        sentAt:
-          type: string
-          format: date-time
+        id:        {type: integer, format: int64}
+        bookingId: {type: integer, format: int64}
+        senderId:  {type: integer, format: int64}
+        content:   {type: string}
+        sentAt:    {type: string, format: date-time}
+
     UserRole:
       type: string
-      enum:
-        - GUEST
-        - ADMIN
-        - CLEANER
+      enum: [GUEST, ADMIN, CLEANER]

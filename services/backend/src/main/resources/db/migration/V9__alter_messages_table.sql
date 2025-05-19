@@ -3,11 +3,11 @@
  *
  * Bring the MESSAGES table up to the Phase-B schema:
  *   • rename from_id  → sender_id     (FK → USERS)
- *   • drop to_id      and its FK
+ *   • drop  to_id     and its FK
  *   • rename body     → content       (TEXT)
  *   • rename ts       → sent_at
- *   • add  booking_id (NOT NULL, FK → BOOKINGS)
- *   • re-create necessary foreign-key constraints
+ *   • add   booking_id (NOT NULL, FK → BOOKINGS)
+ *   • recreate necessary foreign-key constraints
  *****************************************************************************************/
 
 -- 1️⃣  drop old FKs so we can rename / delete columns safely
