@@ -99,4 +99,9 @@ target/
 
 # تجاهل ملفات الأدوات الضخمة
 services/backend/.mvn/wrapper/apache-maven-*.zip
-vendor/*.whl
+vendor/
+# allow vendored wheels
+!vendor/
+!vendor/*.whl
+
+
