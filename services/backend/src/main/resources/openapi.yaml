@@ -328,6 +328,39 @@ paths:
       responses:
         '204':
           description: "Deleted"
+
+  /messages:
+    post:
+      tags: [Message]
+      summary: "Create message"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageDTO'
+      responses:
+        '201':
+          description: "Created"
+    get:
+      tags: [Message]
+      summary: "Get message list"
+      parameters:
+        - in: query
+          name: bookingId
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MessageDTO'
 components:
   schemas:
     FeatureDTO:
@@ -434,6 +467,28 @@ components:
       enum:
         - PENDING
         - DONE
+    MessageDTO:
+      type: object
+      required:
+        - bookingId
+        - senderId
+        - content
+        - sentAt
+      properties:
+        id:
+          type: integer
+          format: int64
+        bookingId:
+          type: integer
+          format: int64
+        senderId:
+          type: integer
+          format: int64
+        content:
+          type: string
+        sentAt:
+          type: string
+          format: date-time
     UserRole:
       type: string
       enum:
