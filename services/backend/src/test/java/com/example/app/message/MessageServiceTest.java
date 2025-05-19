@@ -20,7 +20,8 @@ class MessageServiceTest {
 
   @Test
   void create_and_list_by_booking() {
-    UserEntity guest = userRepo.save(new UserEntity(null, null, "g@example.com", "x"));
+    UserEntity guest =
+        userRepo.save(new UserEntity(null, UserRole.GUEST, "g@example.com", "x"));
     BookingEntity booking =
         bookingRepo.save(new BookingEntity(null, null, guest, LocalDateTime.now(), LocalDateTime.now(), null));
 
