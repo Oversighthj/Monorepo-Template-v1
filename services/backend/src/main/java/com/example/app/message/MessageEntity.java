@@ -1,6 +1,8 @@
 package com.example.app.message;
 
+import com.example.app.booking.BookingEntity;
 import com.example.app.user.UserEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -19,25 +21,35 @@ public class MessageEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  /* FK → BOOKINGS(id) */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "from_id")
-  private UserEntity from;
+  @JoinColumn(name = "booking_id", nullable = false)
+  private BookingEntity booking;
 
+  /* FK → USERS(id) (sender) */
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "to_id")
-  private UserEntity to;
+  @JoinColumn(name = "sender_id", nullable = false)
+  private UserEntity sender;
 
-  private String body;
-  private LocalDateTime ts;
+  @Column(nullable = false, columnDefinition = "TEXT")
+  private String content;
+
+  @Column(name = "sent_at", nullable = false)
+  private LocalDateTime sentAt;
 
   public MessageEntity() {}
 
-  public MessageEntity(Long id, UserEntity from, UserEntity to, String body, LocalDateTime ts) {
+  public MessageEntity(
+      Long id,
+      BookingEntity booking,
+      UserEntity sender,
+      String content,
+      LocalDateTime sentAt) {
     this.id = id;
-    this.from = from;
-    this.to = to;
-    this.body = body;
-    this.ts = ts;
+    this.booking = booking;
+    this.sender = sender;
+    this.content = content;
+    this.sentAt = sentAt;
   }
 
   public Long getId() {
@@ -48,35 +60,35 @@ public class MessageEntity {
     this.id = id;
   }
 
-  public UserEntity getFrom() {
-    return from;
+  public BookingEntity getBooking() {
+    return booking;
   }
 
-  public void setFrom(UserEntity from) {
-    this.from = from;
+  public void setBooking(BookingEntity booking) {
+    this.booking = booking;
   }
 
-  public UserEntity getTo() {
-    return to;
+  public UserEntity getSender() {
+    return sender;
   }
 
-  public void setTo(UserEntity to) {
-    this.to = to;
+  public void setSender(UserEntity sender) {
+    this.sender = sender;
   }
 
-  public String getBody() {
-    return body;
+  public String getContent() {
+    return content;
   }
 
-  public void setBody(String body) {
-    this.body = body;
+  public void setContent(String content) {
+    this.content = content;
   }
 
-  public LocalDateTime getTs() {
-    return ts;
+  public LocalDateTime getSentAt() {
+    return sentAt;
   }
 
-  public void setTs(LocalDateTime ts) {
-    this.ts = ts;
+  public void setSentAt(LocalDateTime sentAt) {
+    this.sentAt = sentAt;
   }
 }
