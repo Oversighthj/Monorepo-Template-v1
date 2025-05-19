@@ -1,34 +1,35 @@
-
 /*****************************************************************************************
  * V9__alter_messages_table.sql
  *
  * Bring the MESSAGES table up to the Phase-B schema:
  *   • rename from_id  → sender_id     (FK → USERS)
- *   • drop to_id      and its FK
+ *   • drop  to_id     and its FK
  *   • rename body     → content       (TEXT)
  *   • rename ts       → sent_at
- *   • add  booking_id (NOT NULL, FK → BOOKINGS)
- *   • re-create necessary foreign-key constraints
+ *   • add   booking_id (NOT NULL, FK → BOOKINGS)
+ *   • recreate necessary foreign-key constraints
  *****************************************************************************************/
+
+-- 1️⃣  drop old FKs so we can rename / delete columns safely
+ALTER TABLE messages DROP CONSTRAINT fk_message_from;
+ALTER TABLE messages DROP CONSTRAINT fk_message_to;
+
+-- 2️⃣  rename & remove columns
+ALTER TABLE messages RENAME COLUMN from_id TO sender_id;
+ALTER TABLE messages DROP    COLUMN to_id;
+ALTER TABLE messages RENAME COLUMN body   TO content;
+ALTER TABLE messages ALTER  COLUMN content TYPE TEXT;
+ALTER TABLE messages RENAME COLUMN ts     TO sent_at;
+
+-- 3️⃣  add the new booking relation
 ALTER TABLE messages
-    /* remove the old FKs so we can rename columns */
-    DROP CONSTRAINT fk_message_from,
-    DROP CONSTRAINT fk_message_to,
+  ADD COLUMN booking_id BIGINT NOT NULL;
 
-    /* rename + drop old columns */
-    RENAME COLUMN from_id TO sender_id,
-    RENAME COLUMN body     TO content,
-    RENAME COLUMN ts       TO sent_at,
-    DROP   COLUMN to_id,
-
-    /* add new column */
-    ADD COLUMN booking_id BIGINT NOT NULL;
-
--- widen the content column to TEXT
+-- 4️⃣  recreate foreign keys with clear names
 ALTER TABLE messages
-    ALTER COLUMN content TYPE TEXT;
+  ADD CONSTRAINT fk_message_sender
+      FOREIGN KEY (sender_id)  REFERENCES users(id);
 
--- recreate FK constraints on the new columns
 ALTER TABLE messages
-    ADD CONSTRAINT fk_message_sender  FOREIGN KEY (sender_id)  REFERENCES users(id),
-    ADD CONSTRAINT fk_message_booking FOREIGN KEY (booking_id) REFERENCES bookings(id);
+  ADD CONSTRAINT fk_message_booking
+      FOREIGN KEY (booking_id) REFERENCES bookings(id);
