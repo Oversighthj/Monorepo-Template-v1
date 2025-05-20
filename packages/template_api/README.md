@@ -47,13 +47,15 @@ Please follow the [installation procedure](#installation--usage) and then run th
 import 'package:template_api/template_api.dart';
 
 
-final api = TemplateApi().getDefaultApi();
+final api = TemplateApi().getBookingApi();
+final int propertyId = 789; // int | 
+final int userId = 789; // int | 
 
 try {
-    final response = await api.featureGet();
+    final response = await api.bookingsGet(propertyId, userId);
     print(response);
 } catch on DioError (e) {
-    print("Exception when calling DefaultApi->featureGet: $e\n");
+    print("Exception when calling BookingApi->bookingsGet: $e\n");
 }
 
 ```
@@ -64,13 +66,40 @@ All URIs are relative to *http://localhost:8080/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+[*BookingApi*](doc/BookingApi.md) | [**bookingsGet**](doc/BookingApi.md#bookingsget) | **GET** /bookings | Get booking list
+[*BookingApi*](doc/BookingApi.md) | [**bookingsIdDelete**](doc/BookingApi.md#bookingsiddelete) | **DELETE** /bookings/{id} | Delete booking
+[*BookingApi*](doc/BookingApi.md) | [**bookingsIdGet**](doc/BookingApi.md#bookingsidget) | **GET** /bookings/{id} | Get booking
+[*BookingApi*](doc/BookingApi.md) | [**bookingsIdPut**](doc/BookingApi.md#bookingsidput) | **PUT** /bookings/{id} | Update booking
+[*BookingApi*](doc/BookingApi.md) | [**bookingsPost**](doc/BookingApi.md#bookingspost) | **POST** /bookings | Create booking
 [*DefaultApi*](doc/DefaultApi.md) | [**featureGet**](doc/DefaultApi.md#featureget) | **GET** /feature | Get feature list
+[*DefaultApi*](doc/DefaultApi.md) | [**propertiesGet**](doc/DefaultApi.md#propertiesget) | **GET** /properties | Get property list
+[*DefaultApi*](doc/DefaultApi.md) | [**propertiesIdDelete**](doc/DefaultApi.md#propertiesiddelete) | **DELETE** /properties/{id} | Delete property
+[*DefaultApi*](doc/DefaultApi.md) | [**propertiesIdGet**](doc/DefaultApi.md#propertiesidget) | **GET** /properties/{id} | Get property
+[*DefaultApi*](doc/DefaultApi.md) | [**propertiesIdPut**](doc/DefaultApi.md#propertiesidput) | **PUT** /properties/{id} | Update property
+[*DefaultApi*](doc/DefaultApi.md) | [**propertiesPost**](doc/DefaultApi.md#propertiespost) | **POST** /properties | Create property
 [*DefaultApi*](doc/DefaultApi.md) | [**statusGet**](doc/DefaultApi.md#statusget) | **GET** /status | Status check
+[*DefaultApi*](doc/DefaultApi.md) | [**usersGet**](doc/DefaultApi.md#usersget) | **GET** /users | Get user list
+[*DefaultApi*](doc/DefaultApi.md) | [**usersPost**](doc/DefaultApi.md#userspost) | **POST** /users | Create user
+[*MessageApi*](doc/MessageApi.md) | [**messagesGet**](doc/MessageApi.md#messagesget) | **GET** /messages | Get message list
+[*MessageApi*](doc/MessageApi.md) | [**messagesPost**](doc/MessageApi.md#messagespost) | **POST** /messages | Create message
+[*TaskApi*](doc/TaskApi.md) | [**tasksGet**](doc/TaskApi.md#tasksget) | **GET** /tasks | Get task list
+[*TaskApi*](doc/TaskApi.md) | [**tasksIdDelete**](doc/TaskApi.md#tasksiddelete) | **DELETE** /tasks/{id} | Delete task
+[*TaskApi*](doc/TaskApi.md) | [**tasksIdGet**](doc/TaskApi.md#tasksidget) | **GET** /tasks/{id} | Get task
+[*TaskApi*](doc/TaskApi.md) | [**tasksIdPut**](doc/TaskApi.md#tasksidput) | **PUT** /tasks/{id} | Update task
+[*TaskApi*](doc/TaskApi.md) | [**tasksPost**](doc/TaskApi.md#taskspost) | **POST** /tasks | Create task
 
 
 ## Documentation For Models
 
+ - [BookingDTO](doc/BookingDTO.md)
+ - [BookingStatus](doc/BookingStatus.md)
  - [FeatureDTO](doc/FeatureDTO.md)
+ - [MessageDTO](doc/MessageDTO.md)
+ - [PropertyDTO](doc/PropertyDTO.md)
+ - [TaskDTO](doc/TaskDTO.md)
+ - [TaskStatus](doc/TaskStatus.md)
+ - [UserDTO](doc/UserDTO.md)
+ - [UserRole](doc/UserRole.md)
 
 
 ## Documentation For Authorization

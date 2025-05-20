@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  * FeatureDTO
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-05-16T09:49:42.646413Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-05-20T15:13:14.707770Z[Etc/UTC]")
 public class FeatureDTO {
 
   private Long id;

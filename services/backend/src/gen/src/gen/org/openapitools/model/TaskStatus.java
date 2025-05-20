@@ -17,21 +17,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Gets or Sets UserRole
+ * Gets or Sets TaskStatus
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-05-20T15:13:14.707770Z[Etc/UTC]")
-public enum UserRole {
+public enum TaskStatus {
   
-  GUEST("GUEST"),
+  PENDING("PENDING"),
   
-  ADMIN("ADMIN"),
-  
-  CLEANER("CLEANER");
+  DONE("DONE");
 
   private String value;
 
-  UserRole(String value) {
+  TaskStatus(String value) {
     this.value = value;
   }
 
@@ -46,8 +44,8 @@ public enum UserRole {
   }
 
   @JsonCreator
-  public static UserRole fromValue(String value) {
-    for (UserRole b : UserRole.values()) {
+  public static TaskStatus fromValue(String value) {
+    for (TaskStatus b : TaskStatus.values()) {
       if (b.value.equals(value)) {
         return b;
       }
