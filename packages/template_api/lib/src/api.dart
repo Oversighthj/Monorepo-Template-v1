@@ -9,7 +9,10 @@ import 'package:template_api/src/auth/api_key_auth.dart';
 import 'package:template_api/src/auth/basic_auth.dart';
 import 'package:template_api/src/auth/bearer_auth.dart';
 import 'package:template_api/src/auth/oauth.dart';
+import 'package:template_api/src/api/booking_api.dart';
 import 'package:template_api/src/api/default_api.dart';
+import 'package:template_api/src/api/message_api.dart';
+import 'package:template_api/src/api/task_api.dart';
 
 class TemplateApi {
   static const String basePath = r'http://localhost:8080/api';
@@ -65,9 +68,27 @@ class TemplateApi {
     }
   }
 
+  /// Get BookingApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  BookingApi getBookingApi() {
+    return BookingApi(dio, serializers);
+  }
+
   /// Get DefaultApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   DefaultApi getDefaultApi() {
     return DefaultApi(dio, serializers);
+  }
+
+  /// Get MessageApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  MessageApi getMessageApi() {
+    return MessageApi(dio, serializers);
+  }
+
+  /// Get TaskApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  TaskApi getTaskApi() {
+    return TaskApi(dio, serializers);
   }
 }
