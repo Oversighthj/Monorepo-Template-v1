@@ -72,6 +72,7 @@ class MessageControllerIntegrationTest {
                   "bookingId": %d,
                   "senderId": %d,
                   "content": "hello"
+                  "sentAt": "2024-01-01T12:00:00Z"
                 }
                 """
             .formatted(bookingId, senderId);
