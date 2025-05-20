@@ -16,7 +16,7 @@ public class MessageService {
 
   public List<MessageEntity> list(Long bookingId) {
     if (bookingId == null) {
-      return messageRepository.findAll();
+      return messageRepository.findAllByOrderBySentAtAsc();
     }
     return messageRepository.findByBookingIdOrderBySentAtAsc(bookingId);
   }

@@ -87,4 +87,39 @@ class MessageControllerIntegrationTest {
         .andExpect(jsonPath("$", Matchers.hasSize(1)))
         .andExpect(jsonPath("$[0].content").value("hello"));
   }
+
+  @Test
+  void getWithoutBookingIdOrdersBySentAt() throws Exception {
+    String msg1 =
+        """
+                {
+                  "bookingId": %d,
+                  "senderId": %d,
+                  "content": "later",
+                  "sentAt": "2024-01-01T13:00:00Z"
+                }
+                """
+            .formatted(bookingId, senderId);
+
+    String msg2 =
+        """
+                {
+                  "bookingId": %d,
+                  "senderId": %d,
+                  "content": "earlier",
+                  "sentAt": "2024-01-01T12:00:00Z"
+                }
+                """
+            .formatted(bookingId, senderId);
+
+    mockMvc.perform(post("/messages").contentType(MediaType.APPLICATION_JSON).content(msg1)).andExpect(status().isCreated());
+    mockMvc.perform(post("/messages").contentType(MediaType.APPLICATION_JSON).content(msg2)).andExpect(status().isCreated());
+
+    mockMvc
+        .perform(get("/messages"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", Matchers.hasSize(2)))
+        .andExpect(jsonPath("$[0].content").value("earlier"))
+        .andExpect(jsonPath("$[1].content").value("later"));
+  }
 }
