@@ -39,14 +39,3 @@ lib/src/model/user_role.dart
 lib/src/serializers.dart
 lib/template_api.dart
 pubspec.yaml
-test/booking_api_test.dart
-test/booking_dto_test.dart
-test/booking_status_test.dart
-test/message_api_test.dart
-test/message_dto_test.dart
-test/property_dto_test.dart
-test/task_api_test.dart
-test/task_dto_test.dart
-test/task_status_test.dart
-test/user_dto_test.dart
-test/user_role_test.dart
