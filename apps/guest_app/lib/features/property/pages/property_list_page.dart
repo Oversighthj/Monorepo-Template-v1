@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:template_api/template_api.dart' as gen;
-
+import 'package:go_router/go_router.dart'; 
 import '../../../core/network/api_client.dart';
 
 /// صفحة تعرض قائمة الملكيّات القادمة من /properties
@@ -71,11 +71,12 @@ class _PropertyListPageState extends State<PropertyListPage> {
       body: ListView.builder(
         itemCount: _properties?.length ?? 0,
         itemBuilder: (_, index) {
-          final prop = _properties![index];
+          final prop = _properties![index];          // ← عرّف المتغيّر
           return ListTile(
             leading: const Icon(Icons.home_outlined),
             title: Text(prop.name ?? 'Unnamed'),
             subtitle: Text(prop.address ?? ''),
+            onTap: () => context.push('/booking/${prop.id}'),
           );
         },
       ),
