@@ -1,38 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
-import 'package:template_api/template_api.dart';   // يصدّر DefaultApi و PropertyDTO و serializers
+import 'package:built_collection/built_collection.dart';
+import 'package:template_api/template_api.dart' as gen;
 
+import '../../../core/network/api_client.dart';
+
+/// صفحة تعرض قائمة الملكيّات القادمة من /properties
 class PropertyListPage extends StatefulWidget {
-  final DefaultApi? apiOverride;
-  const PropertyListPage({super.key, this.apiOverride});
+  /// يحقن API مخصّص في الاختبارات؛ يظلّ null في التشغيل العادي
+  final gen.DefaultApi? apiOverride;
+
+  const PropertyListPage({Key? key, this.apiOverride}) : super(key: key);
 
   @override
   State<PropertyListPage> createState() => _PropertyListPageState();
 }
 
 class _PropertyListPageState extends State<PropertyListPage> {
-  late DefaultApi _api;
-  List<PropertyDTO> _properties = [];
+  /// العميل المولَّد (أو المُحقَن) للتواصل مع الخادم
+  late final gen.DefaultApi _api =
+      widget.apiOverride ?? ApiClient.instance.defaultApi;
+
+  BuiltList<gen.PropertyDTO>? _properties;
   bool _loading = true;
+  String? _error;
 
   @override
   void initState() {
     super.initState();
-    _api = widget.apiOverride ??
-        DefaultApi(Dio(BaseOptions(baseUrl: 'http://localhost:8080')), serializers);
-    _loadProperties();
+    _load();
   }
 
-  Future<void> _loadProperties() async {
+  Future<void> _load() async {
     try {
       final res = await _api.propertiesGet();
       setState(() {
-        _properties = res.data?.toList() ?? [];
+        _properties = res.data;
         _loading = false;
       });
     } catch (e) {
-      setState(() => _loading = false);
-      rethrow;
+      setState(() {
+        _error = e.toString();
+        _loading = false;
+      });
     }
   }
 
@@ -44,16 +53,29 @@ class _PropertyListPageState extends State<PropertyListPage> {
       );
     }
 
+    if (_error != null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Properties')),
+        body: Center(
+          child: Text(
+            _error!,
+            style: const TextStyle(color: Colors.red),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Properties')),
       body: ListView.builder(
-        itemCount: _properties.length,
-        itemBuilder: (context, index) {
-          final prop = _properties[index];
+        itemCount: _properties?.length ?? 0,
+        itemBuilder: (_, index) {
+          final prop = _properties![index];
           return ListTile(
+            leading: const Icon(Icons.home_outlined),
             title: Text(prop.name ?? 'Unnamed'),
-            subtitle: Text(prop.address ?? 'No address'),
-            leading: const Icon(Icons.home),
+            subtitle: Text(prop.address ?? ''),
           );
         },
       ),
