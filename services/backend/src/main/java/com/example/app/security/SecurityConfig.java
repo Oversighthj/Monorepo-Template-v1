@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 import com.example.app.security.JwtAuthFilter;
 
 @Configuration
@@ -29,6 +30,8 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers("/status", "/auth/login", "/v3/api-docs", "/swagger-ui.html", "/swagger-ui/**")
                     .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/users")
+                    .hasRole("ADMIN")
                     .anyRequest()
                     .authenticated())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
