@@ -1,22 +1,19 @@
-package com.example.app.user;
+package com.example.service;
 
-import java.util.List;
+import com.example.model.UserEntity;
+import com.example.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+    private final UserRepository repo;
+    private final PasswordEncoder encoder;
+    public UserService(UserRepository repo, PasswordEncoder encoder) {
+        this.repo = repo; this.encoder = encoder; }
 
-  private final UserRepository userRepository;
-
-  public UserService(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
-
-  public UserEntity create(UserEntity user) {
-    return userRepository.save(user);
-  }
-
-  public List<UserEntity> findAll() {
-    return userRepository.findAllByOrderByIdAsc();
-  }
+    public UserEntity create(UserEntity u) {
+        u.setPasswordHash(encoder.encode(u.getPasswordHash()));
+        return repo.save(u);
+    }
 }
