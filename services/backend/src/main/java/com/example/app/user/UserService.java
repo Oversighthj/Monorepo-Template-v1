@@ -17,6 +17,7 @@ public class UserService {
   }
 
   public UserEntity create(UserEntity user) {
+    user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
     return userRepository.save(user);
   }
 
