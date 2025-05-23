@@ -1,40 +1,54 @@
-package com.example.app.security;
+package com.example.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.security.Key;
+import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
 
-  @Value("${jwt.secret}")
-  private String secret;
+    @Value("${jwt.secret}")
+    private String secret;
 
-  @Value("${jwt.expiration:3600000}")
-  private long expirationMs;
+    @Value("${jwt.expiration-ms:3600000}")
+    private long expirationMs;
 
-  private SecretKey getSigningKey() {
-    byte[] keyBytes = Decoders.BASE64.decode(secret);
-    return Keys.hmacShaKeyFor(keyBytes);
-  }
+    private Key key;
 
-  public String generateToken(String subject) {
-    return Jwts.builder()
-        .setSubject(subject)
-        .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-        .compact();
-  }
+    @PostConstruct
+    void init() {
+        // secret must be 256‑bit (32‑byte) for HS256
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
-  public String getSubject(String token) {
-    return Jwts.parser()
-        .verifyWith(getSigningKey())
-        .build()
-        .parseSignedClaims(token)
-        .getPayload()
-        .getSubject();
-  }
+    public String generateToken(Authentication auth) {
+        Date now = new Date();
+        Date expiry = new Date(now.getTime() + expirationMs);
+        String authorities = auth.getAuthorities()
+                                 .stream()
+                                 .map(GrantedAuthority::getAuthority)
+                                 .collect(Collectors.joining(","));
+        return Jwts.builder()
+                   .setSubject(auth.getName())
+                   .claim("role", authorities) // single role in our model
+                   .setIssuedAt(now)
+                   .setExpiration(expiry)
+                   .signWith(key, SignatureAlgorithm.HS256)
+                   .compact();
+    }
+
+    public Jws<Claims> parseToken(String token) {
+        return Jwts.parserBuilder()
+                   .setSigningKey(key)
+                   .build()
+                   .parseClaimsJws(token);
+    }
 }
