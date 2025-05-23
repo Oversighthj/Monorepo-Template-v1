@@ -1,0 +1,2 @@
+-- No operation for H2 database: pgcrypto and DO blocks are PostgreSQL-specific.
+-- This file is intentionally left blank to allow successful migration on H2.
