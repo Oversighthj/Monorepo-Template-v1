@@ -13,12 +13,16 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.example.app.user.UserEntity;
 import com.example.app.user.UserRepository;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
+
+  private static final Logger log = LoggerFactory.getLogger(JwtAuthFilter.class);
 
   private final JwtTokenProvider tokenProvider;
   private final UserRepository userRepository;
@@ -49,7 +53,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(auth);
       } catch (Exception e) {
-        // invalid token
+        log.warn("Failed to parse token", e);
       }
     }
     filterChain.doFilter(request, response);
