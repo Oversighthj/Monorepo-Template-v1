@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:template_api/api_client.dart';
+import '../network/api_client.dart';
 
 final sl = GetIt.instance;
 
@@ -17,7 +17,7 @@ Future<void> setupLocator() async {
       final client = ApiClient();
       final token = prefs.getString('auth_token');
       if (token != null && token.isNotEmpty) {
-        client.addDefaultHeader('Authorization', 'Bearer $token');
+        client.setToken(token);
       }
       return client;
     });
