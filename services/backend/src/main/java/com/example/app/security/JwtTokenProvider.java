@@ -1,5 +1,6 @@
 package com.example.app.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -22,19 +23,26 @@ public class JwtTokenProvider {
     return Keys.hmacShaKeyFor(keyBytes);
   }
 
-  public String generateToken(String subject) {
+  public String generateToken(String subject, String role) {
+    long now = System.currentTimeMillis();
     return Jwts.builder()
         .setSubject(subject)
+        .claim("role", role)
+        .setIssuedAt(new java.util.Date(now))
+        .setExpiration(new java.util.Date(now + expirationMs))
         .signWith(getSigningKey(), SignatureAlgorithm.HS256)
         .compact();
   }
 
-  public String getSubject(String token) {
+  public Claims getClaims(String token) {
     return Jwts.parser()
         .verifyWith(getSigningKey())
         .build()
         .parseSignedClaims(token)
-        .getPayload()
-        .getSubject();
+        .getPayload();
+  }
+
+  public String getSubject(String token) {
+    return getClaims(token).getSubject();
   }
 }

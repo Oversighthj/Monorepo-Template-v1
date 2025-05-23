@@ -26,8 +26,7 @@ public class AuthController {
     String password = body.get("password");
     return userService
         .validateCredentials(email, password)
-        .map(UserEntity::getEmail)
-        .map(jwtTokenProvider::generateToken)
+        .map(u -> jwtTokenProvider.generateToken(u.getEmail(), u.getRole().name()))
         .map(token -> ResponseEntity.ok(Map.of("token", token)))
         .orElseGet(() -> ResponseEntity.status(401).build());
   }
