@@ -34,8 +34,8 @@ class SecurityEnabledIT {
     userRepo.deleteAll();
     UserEntity admin = userRepo.save(new UserEntity(null, UserRole.ADMIN, "admin@test.io", "hash"));
     UserEntity guest = userRepo.save(new UserEntity(null, UserRole.GUEST, "guest@test.io", "hash"));
-    adminToken = tokenProvider.generateToken(admin.getEmail(), admin.getRole().name());
-    guestToken = tokenProvider.generateToken(guest.getEmail(), guest.getRole().name());
+    adminToken = tokenProvider.generateToken(admin.getEmail(), admin.getRole().toString());
+    guestToken = tokenProvider.generateToken(guest.getEmail(), guest.getRole().toString());
   }
 
   @Test
