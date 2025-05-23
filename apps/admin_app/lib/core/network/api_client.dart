@@ -1,42 +1,20 @@
 import 'package:dio/dio.dart';
-import 'package:built_value/serializer.dart';
-import 'package:built_value/standard_json_plugin.dart';
-import 'package:template_api/template_api.dart' as gen;
+import '../../config.dart';
 
 class ApiClient {
-  ApiClient._()
-      : _dio = Dio(BaseOptions(baseUrl: _defaultBase)),
-        _serializers = (gen.serializers.toBuilder()
-              ..addPlugin(StandardJsonPlugin()))
-            .build();
-
-  static final ApiClient instance = ApiClient._();
-
-  factory ApiClient() => instance;
-
-  static const _defaultBase = 'http://localhost:8080';
-
   final Dio _dio;
-  final Serializers _serializers;
-  String? _token;
+  String? _token; // <‑‑ now USED via interceptor
 
-  void setToken(String? token) {
-    _token = token;
-    if (token != null) {
-      _dio.options.headers['Authorization'] = 'Bearer $token';
-    } else {
-      _dio.options.headers.remove('Authorization');
-    }
+  ApiClient({Dio? dio}) : _dio = dio ?? Dio() {
+    _dio.options.baseUrl = Config.apiBaseUrl;
+    _dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+      if (_token?.isNotEmpty ?? false) {
+        options.headers['Authorization'] = 'Bearer $_token';
+      }
+      return handler.next(options);
+    }));
   }
 
-  gen.DefaultApi get defaultApi => gen.DefaultApi(_dio, _serializers);
-  gen.BookingApi get bookingApi => gen.BookingApi(_dio, _serializers);
-
-  Future<String?> login(String email, String password) async {
-    final response = await _dio.post('/auth/login', data: {
-      'email': email,
-      'password': password,
-    });
-    return response.data?['token'] as String?;
-  }
+  void setToken(String? t) { _token = t; }
+  Dio get dio => _dio;
 }
