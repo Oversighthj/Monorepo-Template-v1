@@ -1,32 +1,19 @@
-package com.example.app.user;
+package com.example.service;
 
-import java.util.List;
-import java.util.Optional;
+import com.example.model.UserEntity;
+import com.example.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+    private final UserRepository repo;
+    private final PasswordEncoder encoder;
+    public UserService(UserRepository repo, PasswordEncoder encoder) {
+        this.repo = repo; this.encoder = encoder; }
 
-  private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
-
-  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-    this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
-  }
-
-  public UserEntity create(UserEntity user) {
-    return userRepository.save(user);
-  }
-
-  public List<UserEntity> findAll() {
-    return userRepository.findAllByOrderByIdAsc();
-  }
-
-  public Optional<UserEntity> validateCredentials(String email, String rawPassword) {
-    return userRepository
-        .findByEmail(email)
-        .filter(u -> passwordEncoder.matches(rawPassword, u.getPasswordHash()));
-  }
+    public UserEntity create(UserEntity u) {
+        u.setPasswordHash(encoder.encode(u.getPasswordHash()));
+        return repo.save(u);
+    }
 }
