@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @SpringBootTest
 @Transactional
+@org.springframework.test.context.ActiveProfiles("test")
 public class BookingServiceTests {
 
   @Autowired private BookingService bookingService;
