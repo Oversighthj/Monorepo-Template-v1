@@ -1,2 +1,2 @@
--- No operation for H2 database: pgcrypto and DO blocks are PostgreSQL-specific.
--- This file is intentionally left blank to allow successful migration on H2.
+-- H2 does not support pgcrypto or DO blocks; skip migration logic for H2
+-- Optionally, add dummy commands or comments if needed for Flyway sync
