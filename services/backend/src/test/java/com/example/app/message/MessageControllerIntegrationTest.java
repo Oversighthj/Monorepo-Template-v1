@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest(classes = TemplateApplication.class)
 @AutoConfigureMockMvc
+@org.springframework.test.context.ActiveProfiles("test")
 @org.springframework.transaction.annotation.Transactional
 class MessageControllerIntegrationTest {
 

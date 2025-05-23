@@ -21,10 +21,28 @@ class ApiClient {
 
   final Dio _dio;
   final Serializers _serializers;
+  String? _token;
+
+  void setToken(String? token) {
+    _token = token;
+    if (token != null) {
+      _dio.options.headers['Authorization'] = 'Bearer $token';
+    } else {
+      _dio.options.headers.remove('Authorization');
+    }
+  }
 
   /// العميل العام (DefaultApi)
   gen.DefaultApi get defaultApi => gen.DefaultApi(_dio, _serializers);
 
   /// عميل الحجوزات المولَّد (BookingApi)
   gen.BookingApi get bookingApi => gen.BookingApi(_dio, _serializers);
+
+  Future<String?> login(String email, String password) async {
+    final response = await _dio.post('/auth/login', data: {
+      'email': email,
+      'password': password,
+    });
+    return response.data?['token'] as String?;
+  }
 }

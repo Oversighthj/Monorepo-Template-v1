@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 /** End-to-end tests for TaskController. */
 @SpringBootTest(classes = TemplateApplication.class)
 @AutoConfigureMockMvc
+@org.springframework.test.context.ActiveProfiles("test")
 @org.springframework.transaction.annotation.Transactional // rollback after each test
 class TaskControllerIntegrationTest {
 

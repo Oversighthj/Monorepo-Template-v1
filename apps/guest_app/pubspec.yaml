@@ -17,6 +17,7 @@ dependencies:
   json_annotation: ^4.9.0
   get_it: ^7.2.0
   connectivity_plus: ^3.0.2
+  shared_preferences: ^2.2.0
   go_router: ^7.0.1
   built_value: ^8.6.0      # أو آخر إصدار متاح
   built_collection: ^5.1.1 # إن لم تكن موجودة بهذا الرقم
