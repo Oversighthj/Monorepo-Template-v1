@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import io.jsonwebtoken.Claims;
 import java.util.List;
@@ -15,13 +17,18 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.example.app.user.UserEntity;
+import com.example.app.user.UserRepository;
+
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider tokenProvider;
+  private final UserRepository userRepository;
 
-  public JwtAuthFilter(JwtTokenProvider tokenProvider) {
+  public JwtAuthFilter(JwtTokenProvider tokenProvider, UserRepository userRepository) {
     this.tokenProvider = tokenProvider;
+    this.userRepository = userRepository;
   }
 
   @Override
@@ -32,6 +39,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
       String token = header.substring(7);
       try {
+        String subject = tokenProvider.getSubject(token);
+        UserEntity user = userRepository.findByEmail(subject).orElse(null);
+        java.util.List<GrantedAuthority> authorities =
+            user == null
+                ? java.util.List.of()
+                : java.util.List.of(
+                    new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+
+        UsernamePasswordAuthenticationToken auth =
+            new UsernamePasswordAuthenticationToken(subject, null, authorities);
         Claims claims = tokenProvider.getClaims(token);
         String subject = claims.getSubject();
         String role = claims.get("role", String.class);
