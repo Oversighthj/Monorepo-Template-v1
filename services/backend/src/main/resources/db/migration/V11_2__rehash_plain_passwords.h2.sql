@@ -1,2 +1,0 @@
--- H2 does not support pgcrypto or DO blocks; skip migration logic for H2
--- Optionally, add dummy commands or comments if needed for Flyway sync
