@@ -1,21 +1,28 @@
 import 'package:get_it/get_it.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../network/api_client.dart';
-import '../network/network_info.dart';
 
 final sl = GetIt.instance;
 
-/// تهيئة جميع الـ singleton المستخدمة في admin_app
-Future<void> initServiceLocator() async {
-  // اتصال الشبكة (Connectivity)
-  sl.registerLazySingleton(() => Connectivity());
+Future<void> setupLocator() async {
+  // SharedPreferences (singleton)
+  final prefs = await SharedPreferences.getInstance();
+  if (!sl.isRegistered<SharedPreferences>()) {
+    sl.registerSingleton<SharedPreferences>(prefs);
+  }
 
-  // كلاس فحص الشبكة
-  sl.registerLazySingleton<NetworkInfo>(
-    () => NetworkInfoImpl(connectivity: sl()),
-  );
+  // ApiClient with token injection (ensure single registration)
+  if (!sl.isRegistered<ApiClient>()) {
+    sl.registerLazySingleton<ApiClient>(() {
+      final client = ApiClient();
+      final token = prefs.getString('auth_token');
+      if (token != null && token.isNotEmpty) {
+        client.setToken(token);
+      }
+      return client;
+    });
+  }
 
-  // ApiClient الموحّد (يحتوي DefaultApi و BookingApi)
-  sl.registerLazySingleton<ApiClient>(() => ApiClient());
+  // Register other services/repositories below …
+  // e.g. sl.registerLazySingleton(() => BookingRepository(sl<ApiClient>()));
 }

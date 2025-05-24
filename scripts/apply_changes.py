@@ -377,6 +377,7 @@ except (FileNotFoundError, sp.CalledProcessError) as exc:
 # ───────────────────────── 13. optional tests ────────────────────
 if args.run_tests:
     try:
+        _run(["pip", "install", "-r", "requirements.txt"], cwd=REPO_ROOT)
         _run(["pytest", "-q"], cwd=REPO_ROOT)
     except sp.CalledProcessError as exc:
         LOG.error("%s tests failed.", ERR)
