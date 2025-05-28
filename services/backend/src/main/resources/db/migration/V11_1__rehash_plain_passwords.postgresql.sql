@@ -7,9 +7,12 @@ BEGIN
             CREATE EXTENSION pgcrypto;
         END IF;
 
-        -- Rehash any stored plain‑text passwords using bcrypt
+        -- Rehash any stored plain-text passwords using bcrypt
         UPDATE users
         SET password_hash = crypt(password_hash, gen_salt('bf'))
         WHERE length(password_hash) < 60; -- plain strings are < 60 chars, bcrypt ≥ 60
     END IF;
-END$$;
+END $$;
+
+-- Skip the PostgreSQL-specific block for H2
+-- Add a compatibility fallback or a no-op for H2 here if needed
