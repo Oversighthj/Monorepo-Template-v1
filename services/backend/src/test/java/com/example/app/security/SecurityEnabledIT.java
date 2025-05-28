@@ -1,59 +1,97 @@
 package com.example.app.security;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.example.app.TemplateApplication;
 import com.example.app.user.UserEntity;
 import com.example.app.user.UserRepository;
 import com.example.app.user.UserRole;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
-@SpringBootTest(classes = TemplateApplication.class)
-@AutoConfigureMockMvc
+import static org.assertj.core.api.Assertions.assertThat;
+
+/**
+ * Integration tests with real SecurityConfig enabled.
+ * Profile "it-auth" activates JWT and uses H2 + Flyway migrations.
+ */
+@SpringBootTest(
+        classes = TemplateApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {
+                "security.enabled=true",
+                "spring.profiles.include=it-auth"
+        })
 @ActiveProfiles("it-auth")
 @Transactional
 class SecurityEnabledIT {
 
-  @Autowired MockMvc mockMvc;
-  @Autowired UserRepository userRepo;
-  @Autowired JwtTokenProvider tokenProvider;
+    @LocalServerPort
+    private int port;
 
-  private String adminToken;
-  private String guestToken;
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
-  @BeforeEach
-  void setup() {
-    userRepo.deleteAll();
-    UserEntity admin = userRepo.save(new UserEntity(null, UserRole.ADMIN, "admin@test.io", "hash"));
-    UserEntity guest = userRepo.save(new UserEntity(null, UserRole.GUEST, "guest@test.io", "hash"));
-    adminToken = tokenProvider.generateToken(admin.getEmail(), admin.getRole().name());
-    guestToken = tokenProvider.generateToken(guest.getEmail(), guest.getRole().name());
-  }
+    @Autowired
+    private UserRepository userRepository;
 
-  @Test
-  void getUsersWithoutTokenReturns401() throws Exception {
-    mockMvc.perform(get("/users")).andExpect(status().isUnauthorized());
-  }
+    private String adminJwt;
+    private String guestJwt;
 
-  @Test
-  void getUsersWithGuestReturns403() throws Exception {
-    mockMvc
-        .perform(get("/users").header("Authorization", "Bearer " + guestToken))
-        .andExpect(status().isForbidden());
-  }
+    @BeforeEach
+    void setUpUsers() {
+        // ----- Admin ----------------------------------------------------
+        UserEntity admin = new UserEntity();
+        admin.setEmail("admin@example.com");
+        admin.setPasswordHash("password");          // لا يهم التشفير في هذا الاختبار
+        admin.setRole(UserRole.ADMIN);
+        userRepository.save(admin);
 
-  @Test
-  void getUsersWithAdminReturns200() throws Exception {
-    mockMvc
-        .perform(get("/users").header("Authorization", "Bearer " + adminToken))
-        .andExpect(status().isOk());
-  }
+        // ----- Guest ----------------------------------------------------
+        UserEntity guest = new UserEntity();
+        guest.setEmail("guest@example.com");
+        guest.setPasswordHash("password");
+        guest.setRole(UserRole.GUEST);
+        userRepository.save(guest);
+
+        // ----- JWTs -----------------------------------------------------
+        adminJwt = tokenProvider.generateToken(admin.getEmail(), admin.getRole().name());
+        guestJwt = tokenProvider.generateToken(guest.getEmail(), guest.getRole().name());
+    } 
+    /* ---------- helpers ------------------------------------------------- */
+
+    private ResponseEntity<String> get(String path, String jwt) {
+        RestTemplate rt = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        if (jwt != null) headers.setBearerAuth(jwt);
+        return rt.exchange("http://localhost:" + port + path,
+                           HttpMethod.GET,
+                           new HttpEntity<>(headers),
+                           String.class);
+    }
+
+    /* ---------- tests --------------------------------------------------- */
+
+    @Test
+    void request_without_token_returns_401() {
+        ResponseEntity<String> res = get("/users", null);
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    void guest_token_on_admin_endpoint_returns_403() {
+        ResponseEntity<String> res = get("/properties", guestJwt);
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    void admin_token_on_admin_endpoint_returns_200() {
+        ResponseEntity<String> res = get("/properties", adminJwt);
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 }

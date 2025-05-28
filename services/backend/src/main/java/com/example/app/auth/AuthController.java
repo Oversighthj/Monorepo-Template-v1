@@ -1,33 +1,48 @@
 package com.example.app.auth;
 
 import com.example.app.security.JwtTokenProvider;
-import com.example.app.user.UserEntity;
-import com.example.app.user.UserService;
-import java.util.Map;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
+/**
+ * Minimal login controller: verifies credentials via Spring-Security's
+ * AuthenticationManager and returns a freshly-minted JWT.
+ */
 @RestController
+@RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-  private final UserService userService;
-  private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
-  public AuthController(UserService userService, JwtTokenProvider jwtTokenProvider) {
-    this.userService = userService;
-    this.jwtTokenProvider = jwtTokenProvider;
-  }
+    /* ------------------------------------------------------------- */
+    /* POST /auth/login                                              */
+    /* ------------------------------------------------------------- */
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest req) {
 
-  @PostMapping("/auth/login")
-  public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> body) {
-    String email = body.get("email");
-    String password = body.get("password");
-    return userService
-        .validateCredentials(email, password)
-        .map(u -> jwtTokenProvider.generateToken(u.getEmail(), u.getRole().name()))
-        .map(token -> ResponseEntity.ok(Map.of("token", token)))
-        .orElseGet(() -> ResponseEntity.status(401).build());
-  }
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(req.email(), req.password()));
+
+        String username = auth.getName();
+        // take first authority ("ROLE_ADMIN"), strip prefix:
+        String role = auth.getAuthorities().stream()
+                          .findFirst().orElseThrow()
+                          .getAuthority().replace("ROLE_", "");
+
+        String token = jwtTokenProvider.generateToken(username, role);
+        return ResponseEntity.ok(new LoginResponse(token));
+    }
+
+    /* ------------------------------------------------------------- */
+    /* Simple DTOs (Java 16+ records)                                */
+    /* ------------------------------------------------------------- */
+    public record LoginRequest(String email, String password) {}
+    public record LoginResponse(String token)                  {}
 }

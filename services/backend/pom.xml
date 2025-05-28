@@ -37,6 +37,7 @@
     <lombok.version>1.18.30</lombok.version>
     <flyway.version>9.22.3</flyway.version>
     <testcontainers.version>1.19.3</testcontainers.version>
+    <jjwt.version>0.11.5</jjwt.version>
     <!-- نقطة الدخول -->
     <start-class>com.example.app.TemplateApplication</start-class>
   </properties>
@@ -48,7 +49,11 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
@@ -57,18 +62,18 @@
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>
-      <version>0.12.3</version>
+      <version>0.11.5</version>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-impl</artifactId>
-      <version>0.12.3</version>
+      <version>0.11.5</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-jackson</artifactId>
-      <version>0.12.3</version>
+      <version>0.11.5</version>
       <scope>runtime</scope>
     </dependency>
 

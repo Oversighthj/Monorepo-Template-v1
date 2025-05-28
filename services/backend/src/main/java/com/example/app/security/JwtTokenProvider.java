@@ -1,48 +1,79 @@
 package com.example.app.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import javax.crypto.SecretKey;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
-  @Value("${jwt.secret}")
-  private String secret;
+    private final UserDetailsService userDetailsService;
 
-  @Value("${jwt.expiration:3600000}")
-  private long expirationMs;
+    @Value("${jwt.secret}")
+    private String secret;
 
-  private SecretKey getSigningKey() {
-    byte[] keyBytes = Decoders.BASE64.decode(secret);
-    return Keys.hmacShaKeyFor(keyBytes);
-  }
+    @Value("${jwt.expiration-ms:86400000}") // 24 h default
+    private long expirationMs;
 
-  public String generateToken(String subject, String role) {
-    long now = System.currentTimeMillis();
-    return Jwts.builder()
-        .setSubject(subject)
-        .claim("role", role)
-        .setIssuedAt(new java.util.Date(now))
-        .setExpiration(new java.util.Date(now + expirationMs))
-        .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-        .compact();
-  }
+    private Key key;
 
-  public Claims getClaims(String token) {
-    return Jwts.parser()
-        .verifyWith(getSigningKey())
-        .build()
-        .parseSignedClaims(token)
-        .getPayload();
-  }
+    @PostConstruct
+    void init() {
+        key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
-  public String getSubject(String token) {
-    return getClaims(token).getSubject();
-  }
+    public String generateToken(String username, String role) {
+        Date now     = new Date();
+        Date expiry  = new Date(now.getTime() + expirationMs);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("role", role)
+                .setIssuedAt(now)
+                .setExpiration(expiry)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException ex) {
+            return false;
+        }
+    }
+
+    public Claims parseClaims(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build()
+                   .parseClaimsJws(token).getBody();
+    }
+
+    public Authentication getAuthentication(String token) {
+        Claims claims    = parseClaims(token);
+        String username  = claims.getSubject();
+        String role      = claims.get("role", String.class);
+
+        UserDetails principal  = userDetailsService.loadUserByUsername(username);
+        Collection<? extends GrantedAuthority> authorities =
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+
+        return new UsernamePasswordAuthenticationToken(
+                principal, token, authorities);
+    }
 }
