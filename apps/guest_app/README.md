@@ -89,10 +89,15 @@ dev_dependencies:
 
 في `lib/core/di/service_locator.dart`:
 ```dart
-final getIt = GetIt.instance;
+final sl = GetIt.instance;
 
-void setupDependencies() {
-  getIt.registerLazySingleton<ApiClient>(() => ApiClient());
+Future<void> setupLocator() async {
+  final prefs = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<ApiClient>(() {
+    final c = ApiClient();
+    c.setToken(prefs.getString('auth_token'));
+    return c;
+  });
   // خدمات أخرى
 }
 ```

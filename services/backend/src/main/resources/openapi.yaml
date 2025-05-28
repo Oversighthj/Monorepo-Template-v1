@@ -9,6 +9,9 @@ servers:
   - url: http://localhost:8080/api
     description: Local dev
 
+security:
+  - BearerAuth: []
+
 paths:
   /feature:
     get:
@@ -26,12 +29,35 @@ paths:
   /status:
     get:
       summary: "Status check"
+      security: []
       responses:
         '200':
           description: "Success"
           content:
             text/plain:
               schema: {type: string}
+  /auth/login:
+    post:
+      summary: "Login"
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: {type: string}
+                password: {type: string}
+      responses:
+        '200':
+          description: "JWT Token"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: {type: string}
 
   /users:
     get:
@@ -318,6 +344,11 @@ paths:
                   $ref: '#/components/schemas/MessageDTO'
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     FeatureDTO:
       type: object

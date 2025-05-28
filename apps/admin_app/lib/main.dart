@@ -7,7 +7,7 @@ import 'routes/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.initServiceLocator(); // تهيئة GetIt (أو أي DI) قبل التشغيل
+  await di.setupLocator(); // تهيئة GetIt (أو أي DI) قبل التشغيل
 
   runApp(
     const ProviderScope(

@@ -6,7 +6,7 @@ import 'routes/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.initServiceLocator();
+  await di.setupLocator();
 
   runApp(
     const ProviderScope(child: CleanerApp()),

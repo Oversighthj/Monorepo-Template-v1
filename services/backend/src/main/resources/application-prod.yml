@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/appdb
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+server:
+  servlet:
+    context-path: /api       # matches openapi.yaml
+
+jwt:
+  secret: ${JWT_SECRET}      # inject via CI / container secrets
+  expiration: 3600000        # 1 hour in ms
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO

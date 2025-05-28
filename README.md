@@ -96,4 +96,4 @@ Ensure you have a simulator or device ready (or use `-d` to specify one). The Fl
 
 ---
 ## Agent Guidelines
-See `AGENTS.md` for automated contributor rules. In short, run `pytest -q` before committing and regenerate OpenAPI clients with `./scripts/generate.sh` whenever you modify the spec.
+See `AGENTS.md` for automated contributor rules. In short, install dependencies with `pip install -r requirements.txt` and run `pytest -q` before committing. Regenerate OpenAPI clients with `./scripts/generate.sh` whenever you modify the spec.

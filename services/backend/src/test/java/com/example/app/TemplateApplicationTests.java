@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 /** اختبار وحدة لمسار GET /feature للتحقق من أنه يرجع قائمة الميزات بنجاح. */
 @SpringBootTest
 @AutoConfigureMockMvc
+@org.springframework.test.context.ActiveProfiles("test")
 public class TemplateApplicationTests {
 
   @Autowired private MockMvc mockMvc;
